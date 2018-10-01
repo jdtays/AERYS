@@ -1,0 +1,106 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://xmlns.jcp.org/jsf/html"
+      xmlns:p="http://primefaces.org/ui"
+      xmlns:f="http://xmlns.jcp.org/jsf/core">
+    <h:head>
+        <title>Registro</title>
+        <h:outputStylesheet library="css" name="estilos.css"/>
+    </h:head>
+    <h:body>
+        <div class="ui-g-12 ui-md-6 ui-lg-4">
+            <h:form>
+                <p:growl id="messages"/>
+                <p:panel header="Tu Tienda Spa"  class="formEstilo">
+                    <p:accordionPanel>
+                        <p:tab title="Servicios">
+                            <h:panelGrid columns="1">
+                                <p:accordionPanel>
+                                    <p:tab title="Masaje de relajación">
+                                        <h:panelGrid columns="1"  class="alIzq">
+                                            <p:graphicImage library="img" name="masaje.jpg" />
+                                            <h:outputText
+                                                value="Adiós a ese nudo en el cuello, al dolor de espalda, a la 
+                                                tensión muscular. Libérate en una hora de todos esos torturantes 
+                                                dolores musculares con este masaje a domicilio. " />
+                                        </h:panelGrid>
+                                    </p:tab>
+                                    <p:tab title="Depilacion con cera">
+                                        <h:panelGrid columns="1"  class="alIzq">
+                                            <p:graphicImage library="img" name="depilacion-con-cera.jpg" />
+                                            <h:outputText value="La depilación con cera a la larga sigue siendo 
+                                                          el método más rápido y efectivo para terminar de una 
+                                                          vez con ese vello corporal tan molesto."/>
+                                        </h:panelGrid>
+                                    </p:tab>
+                                    <p:tab title="Limpieza facial">
+                                        <h:panelGrid columns="1" class="alIzq">
+                                            <p:graphicImage library="img" name="limpieza-facial-profunda.jpg" />
+                                            <h:outputText value="Extraemos tus puntos negros, puntos blancos, 
+                                                          comedones y póstulas, sumado a una mascarilla facial 
+                                                          acorde a tu tipo de piel devolvemos la luminosidad y 
+                                                          vitalidad a la piel de tu rostro.."/>
+                                        </h:panelGrid>
+                                    </p:tab>
+                                </p:accordionPanel>
+                            </h:panelGrid>
+                        </p:tab>
+                        <p:tab title="Solicitar Servicio">
+                            <h:panelGrid columns="1" cellpadding="10">
+
+                            </h:panelGrid>
+                        </p:tab>
+                        <p:tab title="Editar Perfil">
+                            <h:panelGrid columns="2">
+                                <div class="ui-g-12 ui-md-6 ui-lg-4">
+                                    <h:form>
+                                        <p:growl showDetail="true"/>
+                                        <h:panelGrid columns="2">
+                                            
+                                            <p:outputLabel  for="cedula" value="Numero de documento"/>
+                                            <p:inputText id="cedula" value="#{clienteBean.datosDelCliente().cedula}" required="true" requiredMessage="Se requiere una cedula"/>
+
+                                            <p:outputLabel for="tipoDeDocumento" value="Tipo De Documento" />
+                                            <p:selectOneMenu required="true" requiredMessage="Se requiere un tipo de documento" id="tipoDeDocumento" value="#{clienteBean.cliente.idTipoDeDocumento}">
+                                                <f:selectItem itemLabel="Tipo De Documentos" />
+                                                <f:selectItems value="#{tipoDeDocumentoBean.tipoDeDocumentos}" var="tip" itemLabel="#{tip.nombre}" itemValue="#{tip.idTipoDeDocumento}" />
+                                            </p:selectOneMenu>
+
+                                            <p:outputLabel  for="nombre" value="Nombre"/>
+                                            <p:inputText id="nombre" value="#{clienteBean.cliente.nombre}" required="true" requiredMessage="Se requiere un nombre"/>
+
+                                            <p:outputLabel  for="apellido" value="Apellido"/>
+                                            <p:inputText id="apellido" value="#{clienteBean.cliente.apellido}" required="true" requiredMessage="Se requiere un apellido"/>
+
+                                            <p:outputLabel  for="telefono" value="Telefono"/>
+                                            <p:inputText id="telefono" value="#{clienteBean.cliente.telefono}" required="true" requiredMessage="Se requiere un telefono"/>
+
+                                            <p:outputLabel for="genero" value="Genero" />
+                                            <p:selectOneMenu id="genero" value="#{clienteBean.cliente.idGenero}" required="true" requiredMessage="Se requiere un genero" >
+                                                <f:selectItem itemLabel="Generos"/>
+                                                <f:selectItems value="#{generoBean.generos}" var="gen" itemLabel="#{gen.nombre}" itemValue="#{gen.idGenero}"/>
+                                            </p:selectOneMenu>
+
+                                            <p:outputLabel  for="correo" value="Correo"/>
+                                            <p:inputText id="correo" value="#{clienteBean.cliente.correo}" required="true" requiredMessage="Se requiere un correo"/>
+
+                                            <p:outputLabel for="pwd1" value="Contrasena" />
+                                            <p:password id="pwd1" value="#{clienteBean.cliente.contrasena}" match="pwd2" label="Contrasena" required="true"  requiredMessage="Se requiere contrasena"/>
+
+                                            <p:outputLabel for="pwd2" value="Confirmar Contrasena" />
+                                            <p:password id="pwd2" value="#{clienteBean.cliente.contrasena}" label="Confirmar contrasena" required="true" requiredMessage="Se requiere confirmar la contrasena" validatorMessage="Las contrasenas no coinciden"/>
+
+
+                                        </h:panelGrid>
+                                    </h:form>
+                                </div>
+                            </h:panelGrid>
+                        </p:tab>
+                    </p:accordionPanel>
+                </p:panel>
+            </h:form>
+        </div>
+    </h:body>
+</html>
+

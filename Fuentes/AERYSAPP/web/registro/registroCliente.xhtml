@@ -1,0 +1,59 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://xmlns.jcp.org/jsf/html"
+      xmlns:p="http://primefaces.org/ui"
+      xmlns:f="http://xmlns.jcp.org/jsf/core">
+    <h:head>
+        <title>Registro</title>
+          <h:outputStylesheet library="css" name="estilos.css"/>
+    </h:head>
+    <h:body>
+        <div class="ui-g-12 ui-md-6 ui-lg-4">
+            <h:form>
+                <p:panel header="Cliente"  class="formEstilo">
+                    <p:messages />
+
+                    <h:panelGrid columns="2" columnClasses="ui-grid-col-2,ui-grid-col-4,ui-grid-col-2,ui-grid-col-4" styleClass="ui-panelgrid-blank">
+
+                        <p:outputLabel  for="cedula" value="Numero de documento"/>
+                        <p:inputText id="cedula" value="#{clienteBean.cliente.cedula}" required="true" requiredMessage="Se requiere una cedula"/>
+                        
+
+                        <p:outputLabel for="tipoDeDocumento" value="Tipo De Documento" />
+                        <p:selectOneMenu required="true" requiredMessage="Se requiere un tipo de documento" id="tipoDeDocumento" value="#{clienteBean.cliente.idTipoDeDocumento}">
+                            <f:selectItem itemLabel="Tipo De Documentos" />
+                            <f:selectItems value="#{tipoDeDocumentoBean.tipoDeDocumentos}" var="tip" itemLabel="#{tip.nombre}" itemValue="#{tip.idTipoDeDocumento}" />
+                        </p:selectOneMenu>
+
+                        <p:outputLabel  for="nombre" value="Nombre"/>
+                        <p:inputText id="nombre" value="#{clienteBean.cliente.nombre}" required="true" requiredMessage="Se requiere un nombre"/>
+
+                        <p:outputLabel  for="apellido" value="Apellido"/>
+                        <p:inputText id="apellido" value="#{clienteBean.cliente.apellido}" required="true" requiredMessage="Se requiere un apellido"/>
+
+                        <p:outputLabel  for="telefono" value="Telefono"/>
+                        <p:inputText id="telefono" value="#{clienteBean.cliente.telefono}" required="true" requiredMessage="Se requiere un telefono"/>
+
+                        <p:outputLabel for="genero" value="Genero" />
+                        <p:selectOneMenu id="genero" value="#{clienteBean.cliente.idGenero}" required="true" requiredMessage="Se requiere un genero" >
+                            <f:selectItem itemLabel="Generos"/>
+                            <f:selectItems value="#{generoBean.generos}" var="gen" itemLabel="#{gen.nombre}" itemValue="#{gen.idGenero}"/>
+                        </p:selectOneMenu>
+
+                        <p:outputLabel  for="correo" value="Correo"/>
+                        <p:inputText id="correo" value="#{clienteBean.cliente.correo}" required="true" requiredMessage="Se requiere un correo"/>
+
+                        <p:outputLabel for="pwd1" value="Contrasena" />
+                        <p:password id="pwd1" value="#{clienteBean.cliente.contrasena}" match="pwd2" label="Contrasena" required="true" requiredMessage="Se requiere contrasena"/>
+
+                        <p:outputLabel for="pwd2" value="Confirmar Contrasena" />
+                        <p:password id="pwd2" value="#{clienteBean.cliente.contrasena}" label="Confirmar contrasena" required="true" requiredMessage="Se requiere confirmar la contrasena" />
+
+                        <h:commandButton style="width:150px" value="Registrar" id ="registro" action="#{clienteBean.guardarCliente()}"/>
+                    </h:panelGrid>
+                </p:panel>
+            </h:form>
+        </div>
+    </h:body>
+</html>

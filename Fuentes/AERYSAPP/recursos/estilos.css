@@ -1,0 +1,36 @@
+.alDer {
+  text-align: right;
+  padding-right: 5px;
+}
+
+.formTitulo {
+  text-align: left;
+  font-family: Tahoma;
+  font-size: 24px;
+  color: darkslategrey;
+}
+
+.formPie {
+  text-align: right;  
+}
+
+.error {
+  color: brown;
+}
+
+.info {
+  color: green;
+}
+
+.formEstilo {
+  width: 500px;
+  border: 1px solid darkgrey;
+  border-radius: 20px 20px 0 20px;
+  padding: 5px;
+  box-shadow: 4px 4px 4px darkgrey;
+  margin: 0 auto;
+}
+
+.contenedor {
+  padding-top: 30px;
+}
