@@ -22,6 +22,7 @@ public class ClienteDAO {
 
     private Connection conn;
     private PreparedStatement prep;
+    private PreparedStatement stmt;
     private ResultSet rset;
 
     private Cliente cliente;
@@ -80,8 +81,7 @@ public class ClienteDAO {
         return cliente;
     }
 
-    public boolean AutenticacionDeCliente(String correo, String contrasena) {
-        boolean Busqueda = false;
+    public Cliente AutenticacionDeCliente(String correo, String contrasena) {
         try {
             conn = Conexion.getConexion();
             String sql = "SELECT * FROM cliente WHERE correo = ? AND contrasena = ?";
@@ -89,23 +89,6 @@ public class ClienteDAO {
             prep.setString(1, correo);
             prep.setString(2, contrasena);
             rset = prep.executeQuery();
-            if (rset.next()) {
-                Busqueda = true;
-            }
-        } catch (RuntimeException | SQLException e) {
-            throw new RuntimeException("Error SQL - AutenticacionDeCliente()!");
-        }
-        return Busqueda;
-    }
-
-    public Cliente obtenerClientePorCorreo(String correo) {
-        try {
-            conn = Conexion.getConexion();
-            String sql = "SELECT * FROM cliente WHERE correo = ?";
-            prep = conn.prepareStatement(sql);
-            prep.setString(1, correo);
-            rset = prep.executeQuery();
-
             if (rset.next()) {
 
                 cliente = new Cliente();
@@ -117,12 +100,36 @@ public class ClienteDAO {
                 cliente.setCorreo(rset.getString("correo"));
                 cliente.setIdGenero(rset.getInt("idGenero"));
                 cliente.setIdTipoDeDocumento(rset.getInt("idTipoDeDocumento"));
-
+              
             }
         } catch (RuntimeException | SQLException e) {
-            throw new RuntimeException("Error SQL - obtenerClientePorCorreo()!");
+            throw new RuntimeException("Error SQL - AutenticacionDeCliente()!");
         }
         return cliente;
     }
 
+    public Cliente optenerPorCorreo(String correo) {
+        try {
+            conn = Conexion.getConexion();
+            String sql = "select * from cliente where correo = ?";
+            stmt = conn.prepareStatement(sql);
+            stmt.setString(1, correo);
+            rset = stmt.executeQuery();
+
+            if (rset.next()) {
+                cliente = new Cliente();
+                cliente.setIdCliente(rset.getInt("idCliente"));
+                cliente.setCedula(rset.getString("cedula"));
+                cliente.setNombre(rset.getString("nombre"));
+                cliente.setApellido(rset.getString("apellido"));
+                cliente.setTelefono(rset.getString("telefono"));
+                cliente.setCorreo(rset.getString("correo"));
+                cliente.setIdGenero(rset.getInt("idGenero"));
+                cliente.setIdTipoDeDocumento(rset.getInt("idTipoDeDocumento"));
+            }
+        } catch (RuntimeException | SQLException e) {
+            throw new RuntimeException("Error SQL - optenerPorCorreo()!");
+        }
+        return cliente;
+    }
 }

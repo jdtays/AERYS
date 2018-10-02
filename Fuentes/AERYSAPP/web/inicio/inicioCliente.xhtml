@@ -12,7 +12,7 @@
         <div class="ui-g-12 ui-md-6 ui-lg-4">
             <h:form>
                 <p:growl id="messages"/>
-                <p:panel header="Tu Tienda Spa"  class="formEstilo">
+                <p:panel header="Bienbenido a tu tienda spa"  class="formEstilo">
                     <p:accordionPanel>
                         <p:tab title="Servicios">
                             <h:panelGrid columns="1">
@@ -51,15 +51,17 @@
 
                             </h:panelGrid>
                         </p:tab>
+
                         <p:tab title="Editar Perfil">
-                            <h:panelGrid columns="2">
-                                <div class="ui-g-12 ui-md-6 ui-lg-4">
-                                    <h:form>
-                                        <p:growl showDetail="true"/>
-                                        <h:panelGrid columns="2">
-                                            
+                            <div class="ui-g-12 ui-md-6 ui-lg-4">
+                                <h:form>
+                                    <p:panel header="Cliente"  class="formEstilo">
+                                        <p:messages />
+
+                                        <h:panelGrid columns="2" columnClasses="ui-grid-col-2,ui-grid-col-4,ui-grid-col-2,ui-grid-col-4" styleClass="ui-panelgrid-blank">
+
                                             <p:outputLabel  for="cedula" value="Numero de documento"/>
-                                            <p:inputText id="cedula" value="#{clienteBean.datosDelCliente().cedula}" required="true" requiredMessage="Se requiere una cedula"/>
+                                            <p:inputText id="cedula" value="#{clienteBean.cliente.cedula}" required="true" requiredMessage="Se requiere una cedula"/>
 
                                             <p:outputLabel for="tipoDeDocumento" value="Tipo De Documento" />
                                             <p:selectOneMenu required="true" requiredMessage="Se requiere un tipo de documento" id="tipoDeDocumento" value="#{clienteBean.cliente.idTipoDeDocumento}">
@@ -86,16 +88,16 @@
                                             <p:inputText id="correo" value="#{clienteBean.cliente.correo}" required="true" requiredMessage="Se requiere un correo"/>
 
                                             <p:outputLabel for="pwd1" value="Contrasena" />
-                                            <p:password id="pwd1" value="#{clienteBean.cliente.contrasena}" match="pwd2" label="Contrasena" required="true"  requiredMessage="Se requiere contrasena"/>
+                                            <p:password id="pwd1" value="#{clienteBean.cliente.contrasena}" match="pwd2" label="Contrasena" required="true" requiredMessage="Se requiere contrasena"/>
 
                                             <p:outputLabel for="pwd2" value="Confirmar Contrasena" />
-                                            <p:password id="pwd2" value="#{clienteBean.cliente.contrasena}" label="Confirmar contrasena" required="true" requiredMessage="Se requiere confirmar la contrasena" validatorMessage="Las contrasenas no coinciden"/>
+                                            <p:password id="pwd2" value="#{clienteBean.cliente.contrasena}" label="Confirmar contrasena" required="true" requiredMessage="Se requiere confirmar la contrasena" />
 
-
+                                            <h:commandButton style="width:150px" value="Registrar" id ="registro" action="#{clienteBean.guardarCliente()}"/>
                                         </h:panelGrid>
-                                    </h:form>
-                                </div>
-                            </h:panelGrid>
+                                    </p:panel>
+                                </h:form>
+                            </div>
                         </p:tab>
                     </p:accordionPanel>
                 </p:panel>

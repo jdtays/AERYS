@@ -23,12 +23,9 @@ import javax.inject.Named;
 @ViewScoped
 public class ClienteBean implements Serializable {
 
-    String RedireccionDeHomeClienteAinicioCliente = "homeCliente A inicioCliente";
     String RedireccionDeRegistroClienteAinicioCliente = "registroCliente A inicioCliente";
 
     private Cliente cliente;
-
-    Cliente clienteTemporal;
 
     private ClienteDAO clienteDAO = new ClienteDAO();
 
@@ -36,10 +33,10 @@ public class ClienteBean implements Serializable {
     public void inicializar() {
         if (cliente == null) {
             ExternalContext ctx = FacesContext.getCurrentInstance().getExternalContext();
-            String idParam = ctx.getRequestParameterMap().get("idCliente");
+            String idParam = ctx.getRequestParameterMap().get("correo");
 
             if (idParam != null && !idParam.equals("")) {
-                cliente = clienteDAO.obtenerClientePorId(Integer.parseInt(idParam));
+                cliente = clienteDAO.optenerPorCorreo(idParam);
             }
             if (cliente == null) {
                 cliente = new Cliente();
@@ -68,28 +65,24 @@ public class ClienteBean implements Serializable {
         return RedireccionDeRegistroClienteAinicioCliente;
     }
 
-    public String autenticar() {
-        boolean busqueda = clienteDAO.AutenticacionDeCliente(cliente.getCorreo(), cliente.getContrasena());
-        if (busqueda == true) {
-            cliente = clienteDAO.obtenerClientePorCorreo(cliente.getCorreo());
-            return RedireccionDeHomeClienteAinicioCliente;
-
+    public Cliente autenticarCliente() {
+        cliente = clienteDAO.AutenticacionDeCliente(cliente.getCorreo(), cliente.getContrasena());
+        if (cliente != null) {
+            return clienteDAO.obtenerClientePorId(cliente.getIdCliente());
         } else {
-            mensaje("Correo o contrasena incorrectos");
+            mensajeError("Correo o contrasena incorrectos");
             return null;
         }
     }
-
-  
-
-    public Cliente datosDelCliente() {
-        return cliente;
-    }
 // Utilitarios...
 
-    private void mensaje(String msg) {
+    private void mensajeAmigable(String msg) {
         FacesMessage mensaje = new FacesMessage(FacesMessage.SEVERITY_INFO, msg, null);
         FacesContext.getCurrentInstance().addMessage(null, mensaje);
     }
 
+    private void mensajeError(String msg) {
+        FacesMessage mensaje = new FacesMessage(FacesMessage.SEVERITY_FATAL, msg, null);
+        FacesContext.getCurrentInstance().addMessage(null, mensaje);
+    }
 }

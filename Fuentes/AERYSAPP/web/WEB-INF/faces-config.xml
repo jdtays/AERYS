@@ -3,6 +3,7 @@
               xmlns="http://xmlns.jcp.org/xml/ns/javaee"
               xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
               xsi:schemaLocation="http://xmlns.jcp.org/xml/ns/javaee http://xmlns.jcp.org/xml/ns/javaee/web-facesconfig_2_2.xsd">
+
     <navigation-rule>
         <from-view-id>/homeCosmetologa.xhtml</from-view-id>
         <navigation-case>
@@ -13,12 +14,12 @@
     <navigation-rule>
         <from-view-id>/homeCliente.xhtml</from-view-id>
         <navigation-case>
-            <from-outcome>homeCliente A inicioCliente</from-outcome>
+            <from-action>#{clienteBean.autenticarCliente()}</from-action>
             <to-view-id>/inicio/inicioCliente.xhtml</to-view-id>
         </navigation-case>
     </navigation-rule>
     
-     <navigation-rule>
+    <navigation-rule>
         <from-view-id>/registro/registroCliente.xhtml</from-view-id>
         <navigation-case>
             <from-outcome>registroCliente A inicioCliente</from-outcome>
@@ -54,4 +55,5 @@
             <to-view-id>/inicio/inicioCosmetologa.xhtml</to-view-id>
         </navigation-case>
     </navigation-rule>
+ 
 </faces-config>
