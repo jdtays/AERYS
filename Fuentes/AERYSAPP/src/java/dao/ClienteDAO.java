@@ -34,9 +34,8 @@ public class ClienteDAO {
     public void agregarNuevoCliente(Cliente cliente) {
         try {
             conn = Conexion.getConexion();
-            String sql = "insert into cliente(idCliente, cedula, nombre, apellido, telefono, correo, contrasena, idGenero, idTipoDeDocumento) values(?, ?, ?, ?, ?, ?, ?, ?, ?)";
+            String sql = "insert into cliente( cedula, nombre, apellido, telefono, correo, contrasena, idGenero, idTipoDeDocumento) values(?, ?, ?, ?, ?, ?, ?, ?)";
             prep = conn.prepareStatement(sql);
-            prep.setInt(1, cliente.getIdCliente());
             prep.setString(2, cliente.getCedula());
             prep.setString(3, cliente.getNombre());
             prep.setString(4, cliente.getApellido());
@@ -72,6 +71,7 @@ public class ClienteDAO {
                 cliente.setApellido(rset.getString("apellido"));
                 cliente.setTelefono(rset.getString("telefono"));
                 cliente.setCorreo(rset.getString("correo"));
+                cliente.setContrasena(rset.getString("contrasena"));
                 cliente.setIdGenero(rset.getInt("idGenero"));
                 cliente.setIdTipoDeDocumento(rset.getInt("idTipoDeDocumento"));
             }
@@ -98,9 +98,10 @@ public class ClienteDAO {
                 cliente.setApellido(rset.getString("apellido"));
                 cliente.setTelefono(rset.getString("telefono"));
                 cliente.setCorreo(rset.getString("correo"));
+                cliente.setContrasena(rset.getString("contrasena"));
                 cliente.setIdGenero(rset.getInt("idGenero"));
                 cliente.setIdTipoDeDocumento(rset.getInt("idTipoDeDocumento"));
-              
+
             }
         } catch (RuntimeException | SQLException e) {
             throw new RuntimeException("Error SQL - AutenticacionDeCliente()!");
@@ -124,6 +125,7 @@ public class ClienteDAO {
                 cliente.setApellido(rset.getString("apellido"));
                 cliente.setTelefono(rset.getString("telefono"));
                 cliente.setCorreo(rset.getString("correo"));
+                cliente.setContrasena(rset.getString("contrasena"));
                 cliente.setIdGenero(rset.getInt("idGenero"));
                 cliente.setIdTipoDeDocumento(rset.getInt("idTipoDeDocumento"));
             }

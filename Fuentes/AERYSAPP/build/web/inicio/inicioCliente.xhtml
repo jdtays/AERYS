@@ -7,16 +7,17 @@
     <h:head>
         <title>Registro</title>
         <h:outputStylesheet library="css" name="estilos.css"/>
+        <f:event type="preRenderView" listener="#{clienteBean.verificarSesion()}"/>
     </h:head>
     <h:body>
-        <div class="ui-g-12 ui-md-6 ui-lg-4">
+        <div class="ui-fluid">
             <h:form>
                 <p:growl id="messages"/>
                 <p:panel header="Bienbenido a tu tienda spa"  class="formEstilo">
                     <p:accordionPanel>
                         <p:tab title="Servicios">
                             <h:panelGrid columns="1">
-                                <p:accordionPanel>
+                                <p:accordionPanel activeIndex="-2">
                                     <p:tab title="Masaje de relajación">
                                         <h:panelGrid columns="1"  class="alIzq">
                                             <p:graphicImage library="img" name="masaje.jpg" />
@@ -46,22 +47,57 @@
                                 </p:accordionPanel>
                             </h:panelGrid>
                         </p:tab>
-                        <p:tab title="Solicitar Servicio">
-                            <h:panelGrid columns="1" cellpadding="10">
 
-                            </h:panelGrid>
+                        <p:tab title="Mis Servicios">
+                            <p:dataTable var="solicitud" value="#{clienteBean.solicitudes}">
+                                
+                                <p:column headerText="Duracion">
+                                    <h:outputText value="#{solicitud.duracion}" />
+                                </p:column>
+
+                                <p:column headerText="Fecha">
+                                    <h:outputText value="#{solicitud.fecha}" />
+                                </p:column>
+
+                                <p:column headerText="Direccion">
+                                    <h:outputText value="#{solicitud.direccion}" />
+                                </p:column>
+
+                                <p:column headerText="Telefono">
+                                    <h:outputText value="#{solicitud.telefono}" />
+                                </p:column>
+
+                                <p:column headerText="Sector">
+                                    <h:outputText value="#{solicitud.idCliente}" />
+                                </p:column>
+
+                                <p:column headerText="Servicio">
+                                    <h:outputText value="#{solicitud.idServicio}" />
+                                </p:column>
+
+                                <p:column headerText="Estado">
+                                    <h:outputText value="#{solicitud.idEstado}" />
+                                </p:column>
+
+                                <p:column headerText="Cosmetologa">
+                                    <h:outputText value="#{solicitud.idCosmetologa}" />
+                                </p:column>
+
+                                <p:column headerText="Precio">
+                                    <h:outputText value="#{solicitud.precio}" />
+                                </p:column>
+
+                            </p:dataTable>
                         </p:tab>
 
                         <p:tab title="Editar Perfil">
                             <div class="ui-g-12 ui-md-6 ui-lg-4">
-                                <h:form>
+                                <h:form  id="formCliente">
                                     <p:panel header="Cliente"  class="formEstilo">
                                         <p:messages />
-
                                         <h:panelGrid columns="2" columnClasses="ui-grid-col-2,ui-grid-col-4,ui-grid-col-2,ui-grid-col-4" styleClass="ui-panelgrid-blank">
-
                                             <p:outputLabel  for="cedula" value="Numero de documento"/>
-                                            <p:inputText id="cedula" value="#{clienteBean.cliente.cedula}" required="true" requiredMessage="Se requiere una cedula"/>
+                                            <p:inputText id="cedula"  value="#{clienteBean.cliente.cedula}" required="true" requiredMessage="Se requiere una cedula"/>
 
                                             <p:outputLabel for="tipoDeDocumento" value="Tipo De Documento" />
                                             <p:selectOneMenu required="true" requiredMessage="Se requiere un tipo de documento" id="tipoDeDocumento" value="#{clienteBean.cliente.idTipoDeDocumento}">
@@ -93,7 +129,6 @@
                                             <p:outputLabel for="pwd2" value="Confirmar Contrasena" />
                                             <p:password id="pwd2" value="#{clienteBean.cliente.contrasena}" label="Confirmar contrasena" required="true" requiredMessage="Se requiere confirmar la contrasena" />
 
-                                            <h:commandButton style="width:150px" value="Registrar" id ="registro" action="#{clienteBean.guardarCliente()}"/>
                                         </h:panelGrid>
                                     </p:panel>
                                 </h:form>

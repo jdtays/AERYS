@@ -2,8 +2,8 @@
 <Scene Scope="Project" version="2">
     <Scope Scope="Faces Configuration Only"/>
     <Scope Scope="Project">
-        <Node id="registro/registroCosmetologa.xhtml" x="43" y="530" zoom="true"/>
         <Node id="homeCliente.xhtml" x="1000" y="23" zoom="true"/>
+        <Node id="registro/registroCosmetologa.xhtml" x="43" y="530" zoom="true"/>
         <Node id="homeCosmetologa.xhtml" x="74" y="0" zoom="true"/>
         <Node id="index.xhtml" x="535" y="75" zoom="true"/>
         <Node id="registro/registroCliente.xhtml" x="856" y="533" zoom="true"/>
