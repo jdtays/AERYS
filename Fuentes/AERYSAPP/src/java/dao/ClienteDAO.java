@@ -5,7 +5,6 @@
  */
 package dao;
 
-import com.mysql.fabric.xmlrpc.Client;
 import domain.Cliente;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
@@ -22,7 +21,6 @@ public class ClienteDAO {
 
     private Connection conn;
     private PreparedStatement prep;
-    private PreparedStatement stmt;
     private ResultSet rset;
 
     private Cliente cliente;
@@ -34,16 +32,18 @@ public class ClienteDAO {
     public void agregarNuevoCliente(Cliente cliente) {
         try {
             conn = Conexion.getConexion();
-            String sql = "insert into cliente( cedula, nombre, apellido, telefono, correo, contrasena, idGenero, idTipoDeDocumento) values(?, ?, ?, ?, ?, ?, ?, ?)";
+            String sql = "insert into cliente(idCliente, cedula, nombre, apellido, nombreCompleto, telefono, correo, contrasena, idGenero, idTipoDeDocumento) values(?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
             prep = conn.prepareStatement(sql);
+            prep.setInt(1, cliente.getIdCliente());
             prep.setString(2, cliente.getCedula());
             prep.setString(3, cliente.getNombre());
             prep.setString(4, cliente.getApellido());
-            prep.setString(5, cliente.getTelefono());
-            prep.setString(6, cliente.getCorreo());
-            prep.setString(7, cliente.getContrasena());
-            prep.setInt(8, cliente.getIdGenero());
-            prep.setInt(9, cliente.getIdTipoDeDocumento());
+            prep.setString(5, cliente.getNombreCompleto());
+            prep.setString(6, cliente.getTelefono());
+            prep.setString(7, cliente.getCorreo());
+            prep.setString(8, cliente.getContrasena());
+            prep.setInt(9, cliente.getIdGenero());
+            prep.setInt(10, cliente.getIdTipoDeDocumento());
 
             int rta = prep.executeUpdate();
             if (rta != 1) {
@@ -52,6 +52,32 @@ public class ClienteDAO {
 
         } catch (SQLException | RuntimeException e) {
             throw new RuntimeException("Error SQL - agregarNuevoCliente()!");
+        }
+    }
+
+    public void modificarCliente(Cliente cliente) {
+        try {
+            conn = Conexion.getConexion();
+            String sql = "update cliente set cedula = ?, nombre = ?, apellido = ?, nombreCompleto = ?, telefono = ?, correo = ?, contrasena = ?, idGenero = ?, idTipoDeDocumento = ? where idCliente = ?";
+            prep = conn.prepareStatement(sql);
+            prep.setString(1, cliente.getCedula());
+            prep.setString(2, cliente.getNombre());
+            prep.setString(3, cliente.getApellido());
+            prep.setString(4, cliente.getNombreCompleto());
+            prep.setString(5, cliente.getTelefono());
+            prep.setString(6, cliente.getCorreo());
+            prep.setString(7, cliente.getContrasena());
+            prep.setInt(8, cliente.getIdGenero());
+            prep.setInt(9, cliente.getIdTipoDeDocumento());
+            prep.setInt(10, cliente.getIdCliente());
+
+            int rta = prep.executeUpdate();
+            if (rta != 1) {
+                throw new RuntimeException("Error al modificarCliente!");
+            }
+
+        } catch (RuntimeException | SQLException e) {
+            throw new RuntimeException("Error SQL - modificarCliente()!");
         }
     }
 
@@ -69,6 +95,7 @@ public class ClienteDAO {
                 cliente.setCedula(rset.getString("cedula"));
                 cliente.setNombre(rset.getString("nombre"));
                 cliente.setApellido(rset.getString("apellido"));
+                cliente.setNombreCompleto(rset.getString("nombreCompleto"));
                 cliente.setTelefono(rset.getString("telefono"));
                 cliente.setCorreo(rset.getString("correo"));
                 cliente.setContrasena(rset.getString("contrasena"));
@@ -81,7 +108,25 @@ public class ClienteDAO {
         return cliente;
     }
 
-    public Cliente AutenticacionDeCliente(String correo, String contrasena) {
+    public boolean AutenticacionDeCliente(String correo, String contrasena) {
+        boolean Busqueda = false;
+        try {
+            conn = Conexion.getConexion();
+            String sql = "SELECT * FROM cliente WHERE correo = ? AND contrasena = ?";
+            prep = conn.prepareStatement(sql);
+            prep.setString(1, correo);
+            prep.setString(2, contrasena);
+            rset = prep.executeQuery();
+            if (rset.next()) {
+                Busqueda = true;
+            }
+        } catch (RuntimeException | SQLException e) {
+            throw new RuntimeException("Error SQL - AutenticacionDeCosmetologa()!");
+        }
+        return Busqueda;
+    }
+
+    public Cliente BuscarDeClientePorCorreoYContrasena(String correo, String contrasena) {
         try {
             conn = Conexion.getConexion();
             String sql = "SELECT * FROM cliente WHERE correo = ? AND contrasena = ?";
@@ -96,6 +141,7 @@ public class ClienteDAO {
                 cliente.setCedula(rset.getString("cedula"));
                 cliente.setNombre(rset.getString("nombre"));
                 cliente.setApellido(rset.getString("apellido"));
+                cliente.setNombreCompleto(rset.getString("nombreCompleto"));
                 cliente.setTelefono(rset.getString("telefono"));
                 cliente.setCorreo(rset.getString("correo"));
                 cliente.setContrasena(rset.getString("contrasena"));
@@ -109,13 +155,13 @@ public class ClienteDAO {
         return cliente;
     }
 
-    public Cliente optenerPorCorreo(String correo) {
+    public Cliente optenerClientePorCorreo(String correo) {
         try {
             conn = Conexion.getConexion();
             String sql = "select * from cliente where correo = ?";
-            stmt = conn.prepareStatement(sql);
-            stmt.setString(1, correo);
-            rset = stmt.executeQuery();
+            prep = conn.prepareStatement(sql);
+            prep.setString(1, correo);
+            rset = prep.executeQuery();
 
             if (rset.next()) {
                 cliente = new Cliente();
@@ -123,6 +169,7 @@ public class ClienteDAO {
                 cliente.setCedula(rset.getString("cedula"));
                 cliente.setNombre(rset.getString("nombre"));
                 cliente.setApellido(rset.getString("apellido"));
+                cliente.setNombreCompleto(rset.getString("nombreCompleto"));
                 cliente.setTelefono(rset.getString("telefono"));
                 cliente.setCorreo(rset.getString("correo"));
                 cliente.setContrasena(rset.getString("contrasena"));

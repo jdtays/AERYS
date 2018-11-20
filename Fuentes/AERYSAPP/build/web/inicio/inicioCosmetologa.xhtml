@@ -5,88 +5,100 @@
       xmlns:p="http://primefaces.org/ui"
       xmlns:f="http://xmlns.jcp.org/jsf/core">
     <h:head>
-        <title>Facelet Title</title>
+        <title>Inicio</title>
+        <h:outputStylesheet library="css" name="estilos.css"/>
+        <f:event type="preRenderView" listener="#{cosmetologaBean.verificarSesion()}"/>
     </h:head>
     <h:body>
-        <h:form id="form" style="width: 50%;margin: 0 auto;">
-            <p:growl id="msgs" showDetail="true" />
+        <div class="ui-fluid">
+            <h:form id="form">
+                <p:messages />
+                <p:tabMenu activeIndex="#{param.i}">
+                    <p:menuitem value="Registrar Servicios" outcome="/inicio/inicioCosmetologa" icon="ui-icon-star">
+                        <f:param name="i" value="0" />
+                    </p:menuitem>
+                    <p:menuitem value="Editar Perfil" outcome="/perfil/perfilCosmetologa" icon="ui-icon-person">
+                        <f:param name="i" value="1" />
+                    </p:menuitem>
+                    <p:menuitem value="Mis Solitudes" outcome="/solicitud/solicitudesCosmetologa" icon="ui-icon-document">
+                        <f:param name="i" value="2" />
+                    </p:menuitem>
+                    <p:menuitem value="Salir" outcome="/index" actionListener="#{cosmetologaBean.cerrarSesion()}" icon="ui-icon-exit">
+                        <f:param name="i" value="3" />
+                    </p:menuitem>
 
-            <p:tabView>
-                <p:tab title="Editar perfil">
-                    <p:panel header="Cosmetologa">
-                        <p:messages />
-                        <h:panelGrid columns="2" cellpadding="5">
+                </p:tabMenu>
+                <br/>
+                <p:commandButton value="Agregar" oncomplete="PF('addDialog').show()" icon="ui-icon-add" title="View"/>
 
-                            <h:outputText value="Ceduala *" />
-                            <p:inputText value="" required="true" label="Ceduala"/>
+                <p:dataTable var="ser" scrollable="true" emptyMessage="No tengo servicios registrados" scrollWidth="1520px" value="#{cosmetologaBean.serviciosPorCosmetologa}"  widgetVar="servicios" style="text-align:center; margin-bottom:40px">
+                    <f:facet name="header">
+                        Mis servicios
+                    </f:facet>
+                    <p:column style="width:32px;text-align: center">
+                        <p:commandButton update=":form:serDetail" oncomplete="PF('serDialog').show()" icon="ui-icon-search" title="View">
+                            <f:setPropertyActionListener value="#{ser}" target="#{cosmetologaBean.servicioPorCosmetologaSeleccionada}" />
+                        </p:commandButton>
+                        <p:commandButton update=":form:serEliDetail" oncomplete="PF('serEliDialog').show()" icon="ui-icon-trash" title="View">
+                            <f:setPropertyActionListener value="#{ser}" target="#{cosmetologaBean.servicioPorCosmetologaSeleccionada}" />
+                        </p:commandButton>
+                    </p:column>
 
-                            <h:outputText value="Nombre *" />
-                            <p:inputText value="" required="true" label="Nombre"/>
+                    <p:column headerText="Servicio">
+                        <h:outputText value="#{ser.nombreServicio}"/>
+                    </p:column>
+                    <p:column headerText="Experiencia de mi servicio">
+                        <h:outputText value="#{ser.descripcion}"/>
+                    </p:column>
+                </p:dataTable>
 
-                            <h:outputText value="Telefono *" />
-                            <p:inputText value="" required="true" label="Telefono"/>
+                <p:dialog header="Informacion de solicitud" widgetVar="serDialog" modal="true" showEffect="fade" hideEffect="fade" resizable="false">
+                    <p:outputPanel id="serDetail" style="text-align:center;">
+                        <p:panelGrid  columns="2" rendered="#{not empty cosmetologaBean.servicioPorCosmetologaSeleccionada}" columnClasses="label,value">
 
-                            <h:outputText value="Correo *" />
-                            <p:inputText value="" required="true" label="Correo"/>
+                            <h:outputText value="Servicio" />
+                            <h:outputText value="#{cosmetologaBean.servicioPorCosmetologaSeleccionada.nombreServicio}" />
 
-                            <h:outputText value="Contrasena *" />
-                            <p:inputText value="" required="true" label="Contrasena"/>
+                            <h:outputText value="Experiencia de mi servicio" />
+                            <h:outputText value="#{cosmetologaBean.servicioPorCosmetologaSeleccionada.descripcion}" />
 
-                            <h:outputText value="Confirmar contrasena *" />
-                            <p:inputText value="" required="true" label="conContrasena"/>
+                        </p:panelGrid>
 
-                            <p:outputLabel for="Servicios" value="Servicios en capasidad"/>
-                            <p:selectManyCheckbox id="Servicios" columns="3">
-                                <f:selectItem itemLabel="Masaje" itemValue="Masaje" />
-                                <f:selectItem itemLabel="Depilacion" itemValue="Depilacion" />
-                                <f:selectItem itemLabel="Limpieza facial" itemValue="Limpieza" />
-                            </p:selectManyCheckbox>
+                    </p:outputPanel>
 
-                            <p:commandButton id="submitButton" value="Modificar"/>
-                        </h:panelGrid>
-                    </p:panel>
-                </p:tab>
+                </p:dialog>
 
-                <p:tab title="Solisitudes">
-                    <p:dataTable var="Solisitudes" rows="8">
+                <p:dialog  header="Esta accion cancelara y eliminara el servicio. Desea continuar?" widgetVar="serEliDialog" modal="true" showEffect="fade" hideEffect="fade" resizable="false">
+                    <p:outputPanel id="serEliDetail" style="text-align:center;">
 
-                        <p:column headerText="Numero de servicio">
-                            <h:outputText value="idServicio" />
-                        </p:column>
+                        <h:commandButton style="width:300px; height: 30px" value="Aceptar" action="#{cosmetologaBean.eliminarServicioDeCosmetologa()}"/>
+                        <h:commandButton style="width:300px; height: 30px" value="Rechazar"  />
 
-                        <p:column headerText="Cliente">
-                            <h:outputText value="cliente" />
-                        </p:column>
+                    </p:outputPanel>
+                </p:dialog>
 
-                        <p:column headerText="Servicio">
-                            <h:outputText value="nomServicio" />
-                        </p:column>
 
-                        <p:column headerText="Sector">
-                            <h:outputText value="sector" />
-                        </p:column>
+                <p:dialog header="Agregar servicio" widgetVar="addDialog" modal="true" showEffect="fade" hideEffect="fade" resizable="false">
+                    <h:panelGrid id="addServicio" columns="2" columnClasses="ui-grid-col-2,ui-grid-col-4,ui-grid-col-2,ui-grid-col-4" styleClass="ui-panelgrid-blank">
+                        <p:outputLabel  for="idCosmetologa" value="Mi ID"/>
+                        <p:inputText id="idCosmetologa" value="#{cosmetologaBean.cosmetologa.idCosmetologa}" required="true" requiredMessage="Se requiere un estado" disabled="true"/>
+                        <p:outputLabel  for="nombreCosmetologa" value="Cosmetologa"/>
+                        <p:inputText id="nombreCosmetologa" value="#{cosmetologaBean.cosmetologa.nombreCompleto}" required="true" requiredMessage="Se requiere un estado" disabled="true"/>
+                        <p:outputLabel for="servicio" value="Servicio" />
+                        <p:selectOneMenu id="servicio" value="#{cosmetologaBean.servicioPorCosmetologa.idServicio}" >
+                            <f:selectItem itemLabel="Servicios"/>
+                            <f:selectItems value="#{cosmetologaBean.servicios}" var="ser" itemLabel="#{ser.nombre}" itemValue="#{ser.idServicio}"/>
+                        </p:selectOneMenu>
+                        <p:outputLabel for="descripcion" value="Experiencia en el de servicio" />
+                        <p:inputTextarea id="descripcion" rows="10" cols="50" value="#{cosmetologaBean.servicioPorCosmetologa.descripcion}" queryDelay="750" minQueryLength="4" />
+                    </h:panelGrid>
 
-                        <p:column headerText="Duracion">
-                            <h:outputText value="duracion" />
-                        </p:column>
+                    <h:commandButton style="width:150px" value="Registrar" id ="solicitar" action="#{cosmetologaBean.registrarMiServicio()}"/>
 
-                        <p:column headerText="Fecha">
-                            <h:outputText value="fehca" />
-                        </p:column>
+                </p:dialog>
 
-                        <p:column headerText="Hora">
-                            <h:outputText value="hora" />
-                        </p:column>
-
-                        <p:column headerText="Estado">
-                            <h:outputText value="estado" />
-                        </p:column>
-
-                    </p:dataTable>
-                </p:tab>
-   
-            </p:tabView>
-        </h:form>
+            </h:form>
+        </div>
     </h:body>
 </html>
 

@@ -22,7 +22,7 @@
                         <h:outputText value="Contrasena *" />
                         <p:password value="#{cosmetologaBean.cosmetologa.contrasena}" required="true" requiredMessage="Se requiere una contrasena"  label="Contrasena"/>
 
-                        <h:commandButton style="width:150px" value="Iniciar Sesion" action="#{cosmetologaBean.autenticar()}"/>
+                        <h:commandButton style="width:150px" value="Iniciar Sesion" action="#{cosmetologaBean.autenticarCosmetologa()}"/>
                         <p:link value="Registrarse" outcome="registro/registroCosmetologa" style="width:150px"/>
 
                     </h:panelGrid>

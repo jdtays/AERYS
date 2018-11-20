@@ -11,13 +11,17 @@ package domain;
  */
 public class Cosmetologa {
 
+
+
     private int idCosmetologa;
     private String cedula;
     private String nombre;
     private String apellido;
+    private String nombreCompleto;
     private String telefono;
     private String correo;
     private String contrasena;
+
     private int idGenero;
     private int idTipoDeDocumento;
 
@@ -52,8 +56,15 @@ public class Cosmetologa {
     public void setApellido(String apellido) {
         this.apellido = apellido;
     }
-    
-    
+
+    public String getNombreCompleto() {
+        nombreCompleto = nombre + " " + apellido;
+        return nombreCompleto;
+    }
+
+    public void setNombreCompleto(String nombreCompleto) {
+        this.nombreCompleto = nombreCompleto;
+    }
 
     public String getTelefono() {
         return telefono;

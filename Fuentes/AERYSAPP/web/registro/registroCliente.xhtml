@@ -6,7 +6,7 @@
       xmlns:f="http://xmlns.jcp.org/jsf/core">
     <h:head>
         <title>Registro</title>
-          <h:outputStylesheet library="css" name="estilos.css"/>
+        <h:outputStylesheet library="css" name="estilos.css"/>
     </h:head>
     <h:body>
         <div class="ui-g-12 ui-md-6 ui-lg-4">
@@ -18,7 +18,7 @@
 
                         <p:outputLabel  for="cedula" value="Numero de documento"/>
                         <p:inputText id="cedula" value="#{clienteBean.cliente.cedula}" required="true" requiredMessage="Se requiere una cedula"/>
-                        
+
 
                         <p:outputLabel for="tipoDeDocumento" value="Tipo De Documento" />
                         <p:selectOneMenu required="true" requiredMessage="Se requiere un tipo de documento" id="tipoDeDocumento" value="#{clienteBean.cliente.idTipoDeDocumento}">
@@ -26,10 +26,10 @@
                             <f:selectItems value="#{tipoDeDocumentoBean.tipoDeDocumentos}" var="tip" itemLabel="#{tip.nombre}" itemValue="#{tip.idTipoDeDocumento}" />
                         </p:selectOneMenu>
 
-                        <p:outputLabel  for="nombre" value="Nombre"/>
+                        <p:outputLabel  for="nombre" value="Nombres"/>
                         <p:inputText id="nombre" value="#{clienteBean.cliente.nombre}" required="true" requiredMessage="Se requiere un nombre"/>
 
-                        <p:outputLabel  for="apellido" value="Apellido"/>
+                        <p:outputLabel  for="apellido" value="Apellidos"/>
                         <p:inputText id="apellido" value="#{clienteBean.cliente.apellido}" required="true" requiredMessage="Se requiere un apellido"/>
 
                         <p:outputLabel  for="telefono" value="Telefono"/>

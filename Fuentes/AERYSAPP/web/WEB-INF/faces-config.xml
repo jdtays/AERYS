@@ -4,13 +4,7 @@
               xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
               xsi:schemaLocation="http://xmlns.jcp.org/xml/ns/javaee http://xmlns.jcp.org/xml/ns/javaee/web-facesconfig_2_2.xsd">
     
-    <navigation-rule>
-        <from-view-id>/homeCosmetologa.xhtml</from-view-id>
-        <navigation-case>
-            <from-outcome>homeCosmetologa A inicioCosmetologa</from-outcome>
-            <to-view-id>/inicio/inicioCosmetologa.xhtml</to-view-id>
-        </navigation-case>
-    </navigation-rule>
+   
     
     <navigation-rule>
         <from-view-id>/homeCliente.xhtml</from-view-id>
@@ -20,6 +14,24 @@
         </navigation-case>
     </navigation-rule>
     
+     <navigation-rule>
+        <from-view-id>/homeCliente.xhtml</from-view-id>
+        <navigation-case>
+            <from-action>#{clienteBean.autenticarCliente()}</from-action>
+            <to-view-id>/homeCliente.xhtml</to-view-id>
+        </navigation-case>
+    </navigation-rule>
+    
+    <navigation-rule>
+        <from-view-id>/inicioCliente.xhtml</from-view-id>
+        <navigation-case>
+            <from-action>#{clienteBean.solicitarServicio()}</from-action>
+            <to-view-id>/inicio/inicioCliente.xhtml</to-view-id>
+        </navigation-case>
+    </navigation-rule>
+    
+  
+    
     <navigation-rule>
         <from-view-id>/registro/registroCliente.xhtml</from-view-id>
         <navigation-case>
@@ -27,13 +39,7 @@
             <to-view-id>/inicio/inicioCliente.xhtml</to-view-id>
         </navigation-case>
     </navigation-rule>
-    <navigation-rule>
-        <from-view-id>/registro/registroCosmetologa.xhtml</from-view-id>
-        <navigation-case>
-            <from-outcome>registreoCosmetologa A inicioCosmetologa</from-outcome>
-            <to-view-id>/inicio/inicioCosmetologa.xhtml</to-view-id>
-        </navigation-case>
-    </navigation-rule>
+  
     <navigation-rule>
         <from-view-id>/inicio/inicioCliente.xhtml</from-view-id>
         <navigation-case>
@@ -45,6 +51,40 @@
             <to-view-id>/inicio/inicioCliente.xhtml</to-view-id>
         </navigation-case>
     </navigation-rule>
+    
+    
+       <navigation-rule>
+        <from-view-id>/homeCosmetologa.xhtml</from-view-id>
+        <navigation-case>
+            <from-action>#{cosmetologaBean.autenticarCosmetologa()}</from-action>
+            <to-view-id>/inicio/inicioCosmetologa.xhtml</to-view-id>
+        </navigation-case>
+    </navigation-rule>
+    
+     <navigation-rule>
+        <from-view-id>/homeCosmetologa.xhtml</from-view-id>
+        <navigation-case>
+            <from-action>#{cosmetologaBean.autenticarCosmetologa()}</from-action>
+            <to-view-id>/homeCosmetologa.xhtml</to-view-id>
+        </navigation-case>
+    </navigation-rule>
+    
+    <navigation-rule>
+        <from-view-id>/inicioCosmetologa.xhtml</from-view-id>
+        <navigation-case>
+            <from-action>#{cosmetologaBean.solicitarServicio()}</from-action>
+            <to-view-id>/inicio/inicioCosmetologa.xhtml</to-view-id>
+        </navigation-case>
+    </navigation-rule>
+    
+    <navigation-rule>
+        <from-view-id>/registro/registroCosmetologa.xhtml</from-view-id>
+        <navigation-case>
+            <from-outcome>registroCosmetologa A inicioCosmetologa</from-outcome>
+            <to-view-id>/inicio/inicioCosmetologa.xhtml</to-view-id>
+        </navigation-case>
+    </navigation-rule>
+  
     <navigation-rule>
         <from-view-id>/inicio/inicioCosmetologa.xhtml</from-view-id>
         <navigation-case>
@@ -52,9 +92,10 @@
             <to-view-id>/registro/registroCosmetologa.xhtml</to-view-id>
         </navigation-case>
         <navigation-case>
-            <from-outcome>case2</from-outcome>
+            <from-outcome>inicioCosmetologa A inicioCosmetologa</from-outcome>
             <to-view-id>/inicio/inicioCosmetologa.xhtml</to-view-id>
         </navigation-case>
     </navigation-rule>
+
 
 </faces-config>

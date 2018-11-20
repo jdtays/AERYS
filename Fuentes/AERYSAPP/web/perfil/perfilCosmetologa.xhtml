@@ -1,0 +1,77 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://xmlns.jcp.org/jsf/html"
+      xmlns:p="http://primefaces.org/ui"
+      xmlns:f="http://xmlns.jcp.org/jsf/core">
+    <h:head>
+        <title>Registro</title>
+        <h:outputStylesheet library="css" name="estilos.css"/>
+        <f:event type="preRenderView" listener="#{cosmetologaBean.verificarSesion()}"/>
+        <p:messages />
+
+    </h:head>
+    <h:body>
+        <div class="ui-fluid">
+            <h:form>
+                <p:tabMenu activeIndex="#{param.i}">
+                    <p:menuitem value="Servicios" outcome="/inicio/inicioCosmetologa" icon="ui-icon-star">
+                        <f:param name="i" value="0" />
+                    </p:menuitem>
+                    <p:menuitem value="Editar Perfil" outcome="/perfil/perfilCosmetologa" icon="ui-icon-person">
+                        <f:param name="i" value="1" />
+                    </p:menuitem>
+                    <p:menuitem value="Mis Solitudes" outcome="/solicitud/solicitudesCosmetologa" icon="ui-icon-document">
+                        <f:param name="i" value="2" />
+                    </p:menuitem>
+                    <p:menuitem value="Salir" outcome="/index" actionListener="#{cosmetologaBean.cerrarSesion()}" icon="ui-icon-exit">
+                        <f:param name="i" value="4" />
+                    </p:menuitem>
+                </p:tabMenu>
+                <br/>
+                <h:form  id="formCosmetologa">
+                    <p:panel header="Cosmetologa">
+
+                        <h:panelGrid  rendered="true" id="matchGrid" columns="2" columnClasses="ui-grid-col-2,ui-grid-col-4,ui-grid-col-2,ui-grid-col-4" styleClass="ui-panelgrid-blank">
+                            <p:outputLabel  for="cedula" value="Numero de documento"/>
+                            <p:inputText id="cedula"  value="#{cosmetologaBean.cosmetologa.cedula}" required="true" requiredMessage="Se requiere una cedula"/>
+
+                            <p:outputLabel for="tipoDeDocumento" value="Tipo De Documento" />
+                            <p:selectOneMenu required="true" requiredMessage="Se requiere un tipo de documento" id="tipoDeDocumento" value="#{cosmetologaBean.cosmetologa.idTipoDeDocumento}">
+                                <f:selectItem itemLabel="Tipo De Documentos" />
+                                <f:selectItems value="#{tipoDeDocumentoBean.tipoDeDocumentos}" var="tip" itemLabel="#{tip.nombre}" itemValue="#{tip.idTipoDeDocumento}" />
+                            </p:selectOneMenu>
+
+                            <p:outputLabel  for="nombre" value="Nombre"/>
+                            <p:inputText id="nombre" value="#{cosmetologaBean.cosmetologa.nombre}" required="true" requiredMessage="Se requiere un nombre"/>
+
+                            <p:outputLabel  for="apellido" value="Apellido"/>
+                            <p:inputText id="apellido" value="#{cosmetologaBean.cosmetologa.apellido}" required="true" requiredMessage="Se requiere un apellido"/>
+
+                            <p:outputLabel  for="telefono" value="Telefono"/>
+                            <p:inputText id="telefono" value="#{cosmetologaBean.cosmetologa.telefono}" required="true" requiredMessage="Se requiere un telefono"/>
+
+                            <p:outputLabel for="genero" value="Genero" />
+                            <p:selectOneMenu id="genero" value="#{cosmetologaBean.cosmetologa.idGenero}" required="true" requiredMessage="Se requiere un genero" >
+                                <f:selectItem itemLabel="Generos"/>
+                                <f:selectItems value="#{generoBean.generos}" var="gen" itemLabel="#{gen.nombre}" itemValue="#{gen.idGenero}"/>
+                            </p:selectOneMenu>
+
+                            <p:outputLabel  for="correo" value="Correo"/>
+                            <p:inputText id="correo" value="#{cosmetologaBean.cosmetologa.correo}" required="true" requiredMessage="Se requiere un correo"/>
+
+                            <p:outputLabel for="pwd1" value="Contrasena" />
+                            <p:password id="pwd1" value="#{cosmetologaBean.cosmetologa.contrasena}" match="pwd2" label="Contrasena" required="true" requiredMessage="Se requiere contrasena"/>
+
+                            <p:outputLabel for="pwd2" value="Confirmar Contrasena" />
+                            <p:password id="pwd2" value="#{cosmetologaBean.cosmetologa.contrasena}" label="Confirmar contrasena" required="true" requiredMessage="Se requiere confirmar la contrasena" />
+
+                            <h:commandButton style="width:150px" value="Modificar" id ="registro" action="#{cosmetologaBean.modificarCosmetologa()}"/>
+                        </h:panelGrid>
+                    </p:panel>
+                </h:form>
+
+            </h:form>
+        </div>
+    </h:body>
+</html>
+

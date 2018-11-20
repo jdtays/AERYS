@@ -2,13 +2,20 @@
 <Scene Scope="Project" version="2">
     <Scope Scope="Faces Configuration Only"/>
     <Scope Scope="Project">
-        <Node id="homeCliente.xhtml" x="1000" y="23" zoom="true"/>
+        <Node id="solicitud/solicitudesCliente.xhtml" x="400" y="150" zoom="true"/>
         <Node id="registro/registroCosmetologa.xhtml" x="43" y="530" zoom="true"/>
-        <Node id="homeCosmetologa.xhtml" x="74" y="0" zoom="true"/>
+        <Node id="solicitud/solicitudesCosmetologa.xhtml" x="400" y="300" zoom="true"/>
         <Node id="index.xhtml" x="535" y="75" zoom="true"/>
+        <Node id="inicioCliente.xhtml" x="650" y="150" zoom="true"/>
+        <Node id="perfil/perfilCosmetologa.xhtml" x="150" y="300" zoom="true"/>
+        <Node id="inicio/inicioCosmetologa.xhtml" x="408" y="460" zoom="true"/>
+        <Node id="perfil/perfilCliente.xhtml" x="274" y="59" zoom="true"/>
+        <Node id="homeCliente.xhtml" x="1000" y="23" zoom="true"/>
+        <Node id="homeCosmetologa.xhtml" x="14" y="11" zoom="true"/>
         <Node id="registro/registroCliente.xhtml" x="856" y="533" zoom="true"/>
-        <Node id="inicio/inicioCliente.xhtml" x="780" y="197" zoom="true"/>
-        <Node id="inicio/inicioCosmetologa.xhtml" x="379" y="200" zoom="true"/>
+        <Node id="solicitud/solicitudCliente.xhtml" x="336" y="16" zoom="true"/>
+        <Node id="inicio/inicioCliente.xhtml" x="911" y="172" zoom="true"/>
+        <Node id="inicioCosmetologa.xhtml" x="150" y="150" zoom="true"/>
     </Scope>
     <Scope Scope="All Faces Configurations"/>
 </Scene>
