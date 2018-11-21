@@ -332,24 +332,13 @@ public class CosmetologaBean implements Serializable {
         FacesContext.getCurrentInstance().getExternalContext().getSessionMap().put("solicitud", solicitud);
     }
 
-    public void aceptarSolicitud() {
-        estadoDeSolicitudTemporal = "Aceptado";
-        modificarSolicitud();
-    }
-
-    public void rechazarSolicitud() {
-        estadoDeSolicitudTemporal = "Rechazado";
-        modificarSolicitud();
-    }
-
-    public void solicitudEnCurso() {
-        estadoDeSolicitudTemporal = "En curso";
-        modificarSolicitud();
-    }
-
-    public void solicitudFinalizado() {
-        estadoDeSolicitudTemporal = "Finalizado";
-        modificarSolicitud();
+    public void confirmarEstadoDeSolicitud() {
+        if ("Por confirmar".equals(solicitudSeleccionada.getIdEstado())) {
+            mensajeError("Se requiere confirmar el estado de solicitud");
+        } else {
+            estadoDeSolicitudTemporal = solicitudSeleccionada.getIdEstado();
+            modificarSolicitud();
+        }
     }
 
     public void modificarCosmetologa() {
@@ -402,11 +391,11 @@ public class CosmetologaBean implements Serializable {
             if (cosmetologa == null) {
                 context.getExternalContext().redirect("homeCosmetologa.xhtml");
             }
-         } catch (Exception e) {
+        } catch (Exception e) {
         }
     }
-    
-       public void cerrarSesion() {
+
+    public void cerrarSesion() {
         try {
             FacesContext context = FacesContext.getCurrentInstance();
             cosmetologa = (Cosmetologa) context.getExternalContext().getSessionMap().get("cosmetologa");

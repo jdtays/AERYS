@@ -46,7 +46,7 @@
                             <p:selectOneMenu id="cosmetologa" value="#{clienteBean.solicitud.idCosmetologa}" required="true" requiredMessage="Se requiere una cosmetologa" >
                                 <p:ajax listener="#{clienteBean.onServicioPorCosmetologaChange()}" update="servicio" />
                                 <f:selectItem itemLabel="Cosmetologas"/>
-                                <f:selectItems value="#{cosmetologaBean.cosmetologas}" var="cos" itemLabel="#{cos.nombre}" itemValue="#{cos.idCosmetologa}"/>
+                                <f:selectItems value="#{cosmetologaBean.cosmetologas}" var="cos" itemLabel="#{cos.nombreCompleto}" itemValue="#{cos.idCosmetologa}"/>
                             </p:selectOneMenu>
 
                             <p:outputLabel for="servicio" value="Servicio" />

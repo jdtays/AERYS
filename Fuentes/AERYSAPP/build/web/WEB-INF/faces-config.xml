@@ -5,6 +5,17 @@
               xsi:schemaLocation="http://xmlns.jcp.org/xml/ns/javaee http://xmlns.jcp.org/xml/ns/javaee/web-facesconfig_2_2.xsd">
     
    
+     <navigation-rule>
+        <from-view-id>/homeAdministrador.xhtml</from-view-id>
+        <navigation-case>
+            <from-action>#{administradorBean.autenticarAdmin()}</from-action>
+            <to-view-id>/inicio/inicioAdmin.xhtml</to-view-id>
+        </navigation-case>
+         <navigation-case>
+             <from-outcome>case1</from-outcome>
+             <to-view-id>/admin/adminServicio.html</to-view-id>
+         </navigation-case>
+     </navigation-rule>
     
     <navigation-rule>
         <from-view-id>/homeCliente.xhtml</from-view-id>
@@ -96,6 +107,4 @@
             <to-view-id>/inicio/inicioCosmetologa.xhtml</to-view-id>
         </navigation-case>
     </navigation-rule>
-
-
 </faces-config>

@@ -261,7 +261,6 @@ public class ClienteBean implements Serializable {
     }
 
     public void eliminarSolicitudDeCliente() {
-
         Solicitud solicitudTemporal = solicitudSeleccionada;
 
         SolicitudDAO solicitudDAO = new SolicitudDAO();
@@ -378,4 +377,5 @@ public class ClienteBean implements Serializable {
         solicitud.setPrecio(precioServicioTemporal);
     }
 
+ 
 }

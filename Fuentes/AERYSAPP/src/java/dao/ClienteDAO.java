@@ -121,7 +121,7 @@ public class ClienteDAO {
                 Busqueda = true;
             }
         } catch (RuntimeException | SQLException e) {
-            throw new RuntimeException("Error SQL - AutenticacionDeCosmetologa()!");
+            throw new RuntimeException("Error SQL - AutenticacionDeCliente()!");
         }
         return Busqueda;
     }

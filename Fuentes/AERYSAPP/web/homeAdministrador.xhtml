@@ -1,0 +1,38 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">	
+
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://xmlns.jcp.org/jsf/html"
+      xmlns:f="http://xmlns.jcp.org/jsf/core"
+      xmlns:p="http://primefaces.org/ui">
+    <h:head>
+        <title>Autenticar</title>
+        <h:outputStylesheet library="css" name="estilos.css"/>
+        <p:messages />
+    </h:head>
+    <h:body>
+        <div class="ui-g-12 ui-md-6 ui-lg-4">
+            <h:form> 
+                <p:panel header="Administrador" style="margin-bottom:20px" class="formEstilo">
+                    <h:panelGrid columns="2">
+
+                        <h:outputText value="Correo *" />
+                        <p:inputText value="#{administradorBean.admin.correo}" required="true" requiredMessage="Se requiere un correo" label="correo"/>
+
+                        <h:outputText value="Contrasena *" />
+                        <p:password value="#{administradorBean.admin.contrasena}" required="true" requiredMessage="Se requiere una contrasena"  label="Contrasena"/>
+
+                        <h:commandButton style="width:150px" value="Iniciar Sesion"  action="#{administradorBean.autenticarAdmin()}"/>
+     
+
+                    </h:panelGrid>
+                </p:panel>
+            </h:form>
+        </div> 
+    </h:body>
+</html>
+
+
+
+
+

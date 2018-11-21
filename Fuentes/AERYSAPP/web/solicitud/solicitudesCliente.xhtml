@@ -15,7 +15,6 @@
     <h:body>
         <div class="ui-fluid">
             <h:form id="form">
-                <p:commandButton style="width:150px; height: 25px" actionListener="#{clienteBean.cerrarSesion()}" value="Salir" id ="salir" action="/index?"/>
                 <p:tabMenu activeIndex="#{param.i}">
                     <p:menuitem value="Servicios" outcome="/inicio/inicioCliente" icon="ui-icon-star">
                         <f:param name="i" value="0" />

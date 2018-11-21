@@ -15,7 +15,6 @@
     <h:body>
         <div class="ui-fluid">
             <h:form id="form">
-                <p:commandButton style="width:150px; height: 25px" actionListener="#{cosmetologaBean.cerrarSesion()}" value="Salir" id ="salir" action="/index?"/>
                 <p:tabMenu activeIndex="#{param.i}">
                     <p:menuitem value="Servicios" outcome="/inicio/inicioCosmetologa" icon="ui-icon-star">
                         <f:param name="i" value="0" />
@@ -144,13 +143,15 @@
                             <h:outputText value="Precio: " />
                             <h:outputText value="#{cosmetologaBean.solicitudSeleccionada.precio}" />
 
-                        </p:panelGrid>
-                        <h:outputText value="Opciones de solicitud" />
-                        <h:outputText value="" />
-                        <h:commandButton style="width:80px; height: 20px" value="Aceptar" action="#{cosmetologaBean.aceptarSolicitud()}"/>
-                        <h:commandButton style="width:80px; height: 20px" value="Rechazar" action="#{cosmetologaBean.rechazarSolicitud()}" />
-                        <h:commandButton style="width:80px; height: 20px" value="Finalizado" action="#{cosmetologaBean.solicitudFinalizado()}" />
-                        <h:commandButton style="width:80px; height: 20px" value="En curso" action="#{cosmetologaBean.solicitudEnCurso()}" />
+                            <p:outputLabel  for="estado" value="Confirmar estado de solicitud: "/>
+                            <p:selectOneMenu id="estado" value="#{cosmetologaBean.solicitudSeleccionada.idEstado}" required="true" requiredMessage="Se requiere confirmar estado" >
+                                <f:selectItem itemLabel="Estados"/>
+                                <f:selectItems value="#{administradorBean.estados}" var="est" itemLabel="#{est.nombre}" itemValue="#{est.nombre}"/>
+                            </p:selectOneMenu>
+
+                        </p:panelGrid>   
+                        <h:commandButton style="width:300px; height: 30px" value="Confirmar Solicitud" action="#{cosmetologaBean.confirmarEstadoDeSolicitud()}"/>
+
                     </p:outputPanel>
 
                 </p:dialog>
