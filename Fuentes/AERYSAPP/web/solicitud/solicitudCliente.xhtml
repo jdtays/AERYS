@@ -34,7 +34,7 @@
                 <br/>
                 <h:form  id="formCliente"  rendered="true">
                     <p:panel header="Datos Del Servicio" >
-                        <h:panelGrid columns="2" columnClasses="ui-grid-col-2,ui-grid-col-4,ui-grid-col-2,ui-grid-col-4" styleClass="ui-panelgrid-blank">
+                        <h:panelGrid columns="2">
 
                             <p:outputLabel  for="idCliente" value="Propietario de la cuenta"/>
                             <p:inputText id="idCliente" value="#{clienteBean.cliente.nombreCompleto}" required="true" requiredMessage="Se requiere un estado" disabled="true"/>
@@ -83,12 +83,10 @@
                             <p:outputLabel  for="precio" value="Precio"/>
                             <p:inputText id="precio" value="#{clienteBean.solicitud.precio}" disabled="true"/>
 
-                            <h:commandButton style="width:150px" value="Solicitar" id ="solicitar" action="#{clienteBean.solicitarServicio()}"/>
-
+                            <p:commandButton  value="Solicitar" id ="solicitar" action="#{clienteBean.solicitarServicio()}" ajax="false"/>
                         </h:panelGrid>
                     </p:panel>
                 </h:form>
-
             </h:form>
         </div>
     </h:body>

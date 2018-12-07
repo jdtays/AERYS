@@ -11,8 +11,6 @@
         <p:messages />
     </h:head>
     <h:body>
-        <div class="ui-fluid">
-
             <h:form  id="form">
                 <p:tabMenu activeIndex="#{param.i}">
                     <p:menuitem value="Inicio" outcome="/inicio/inicioAdmin" icon="ui-icon-star">
@@ -27,24 +25,32 @@
                     <p:menuitem value="Editar estados" outcome="/admin/adminEstado" icon="ui-icon-document">
                         <f:param name="i" value="3" />
                     </p:menuitem>
-                    <p:menuitem value="Salir" outcome="/index" actionListener="#{administradorBean.cerrarSesion()}" icon="ui-icon-exit">
+                    <p:menuitem value="Clientes" outcome="/admin/adminCliente" icon="ui-icon-document">
                         <f:param name="i" value="4" />
+                    </p:menuitem>
+                    <p:menuitem value="Cosmetologas" outcome="/admin/adminCosmetologa" icon="ui-icon-document">
+                        <f:param name="i" value="5" />
+                    </p:menuitem>
+                    <p:menuitem value="Salir" outcome="/index" actionListener="#{administradorBean.cerrarSesion()}" icon="ui-icon-exit">
+                        <f:param name="i" value="6" />
                     </p:menuitem>
                 </p:tabMenu>
                 <br/>
 
                 <p:commandButton value="Agregar" onclick="PF('serAddDialog').show();" type="button" icon="pi pi-add" update=":form"/>                        
 
-                <p:dataTable var="ser" scrollable="true" emptyMessage="No se encontraron sectores" scrollWidth="1520px" value="#{administradorBean.sectores}"  widgetVar="sectores" style="margin-bottom:40px">
+                <p:dataTable var="ser" reflow ="true" emptyMessage="No se encontraron sectores"  selection="#{administradorBean.sector}" selectionMode="single" 
+                             id="sectoresDT" rows="5" paginator="true" value="#{administradorBean.sectores}"  widgetVar="sectores" 
+                             rowKey="#{ser.idSector}">
+
                     <f:facet name="header">
                         Mis sectores
                     </f:facet>
 
-                    <p:column style="width:32px;text-align: center">
-                        <p:commandButton update=":form:serDetail" oncomplete="PF('serDialog').show()" icon="ui-icon-search" title="View">
-                            <f:setPropertyActionListener value="#{ser}" target="#{administradorBean.sectorSeleccionado}" />
-                        </p:commandButton>
-                        <p:commandButton update=":form:serEliDetail" oncomplete="PF('serEliDialog').show()" icon="ui-icon-trash" title="View">
+                    <p:ajax id="rowSelect" event="rowSelect" listener="#{administradorBean.onRowSelectSector}" update=":form:serDetail" oncomplete="PF('serDialog').show()" />
+
+                    <p:column style="width:100px;text-align: center">
+                        <p:commandButton value="Eliminar" update=":form:serEliDetail" oncomplete="PF('serEliDialog').show()" icon="ui-icon-trash" title="View">
                             <f:setPropertyActionListener value="#{ser}" target="#{administradorBean.sectorSeleccionado}" />
                         </p:commandButton>
                     </p:column>
@@ -76,8 +82,8 @@
                 <p:dialog  header="Esta accion eliminara el sector. Desea continuar?" widgetVar="serEliDialog" modal="true" showEffect="fade" hideEffect="fade" resizable="false">
                     <p:outputPanel id="serEliDetail" style="text-align:center;">
 
-                        <h:commandButton style="width:300px; height: 30px" value="Aceptar" actionListener = "#{administradorBean.eliminarSector()}"/>
-                        <h:commandButton style="width:300px; height: 30px" value="Rechazar"  />
+                        <p:commandButton style="width:300px; height: 30px" value="Aceptar" actionListener = "#{administradorBean.eliminarSector()}" ajax="false"/>
+                        <p:commandButton style="width:300px; height: 30px" value="Rechazar" ajax="false" />
 
                     </p:outputPanel>
                 </p:dialog>
@@ -91,13 +97,12 @@
                         <p:outputLabel for="descripcion" value="Descripcion de sector" />
                         <p:inputTextarea id="descripcion" rows="10" cols="50" value="#{administradorBean.sector.descripcion}" queryDelay="500" minQueryLength="4" />
 
-                        <h:commandButton style="width:150px; height: 25px"  action="#{administradorBean.guardarSector()}" value="Guardar" id ="guardar"/>
+                        <p:commandButton style="width:150px; height: 25px"  action="#{administradorBean.guardarSector()}" value="Guardar" id ="guardar" ajax="false"/>
 
                     </h:panelGrid>
                 </p:dialog>
             </h:form>
 
-        </div>
     </h:body>
 </html>
 

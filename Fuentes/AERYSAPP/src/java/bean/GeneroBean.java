@@ -8,10 +8,13 @@ package bean;
 import dao.GeneroDAO;
 import dao.TipoDeDocumentoDAO;
 import domain.Genero;
+import domain.Response;
 import domain.TipoDeDocumento;
 import java.util.List;
 import javax.inject.Named;
 import javax.enterprise.context.Dependent;
+import javax.faces.application.FacesMessage;
+import javax.faces.context.FacesContext;
 
 /**
  *
@@ -30,5 +33,23 @@ public class GeneroBean {
 
     public List<Genero> getGeneros() {
         return generoDAO.obtenerTodos();
+      //  Response respuesta = generoDAO.optenerTodosLosGeneros();
+      //  if (respuesta.getCodigoRespuesta() == 0) {
+       //     return respuesta.getLista();
+
+      //  } else {
+      //      mensajeError(respuesta.getDescripcionDeLaRespuesta());
+     //       return respuesta.getLista();
+      //  }
+    }
+
+    private void mensajeError(String msg) {
+        FacesMessage mensaje = new FacesMessage(FacesMessage.SEVERITY_FATAL, msg, null);
+        FacesContext.getCurrentInstance().addMessage("Error", mensaje);
+    }
+
+    private void mensajeAmigable(String msg) {
+        FacesMessage mensaje = new FacesMessage(FacesMessage.SEVERITY_INFO, msg, null);
+        FacesContext.getCurrentInstance().addMessage("Error", mensaje);
     }
 }

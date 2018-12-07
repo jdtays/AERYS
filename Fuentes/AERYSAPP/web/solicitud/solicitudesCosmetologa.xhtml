@@ -13,7 +13,6 @@
 
     </h:head>
     <h:body>
-        <div class="ui-fluid">
             <h:form id="form">
                 <p:tabMenu activeIndex="#{param.i}">
                     <p:menuitem value="Servicios" outcome="/inicio/inicioCosmetologa" icon="ui-icon-star">
@@ -30,34 +29,38 @@
                     </p:menuitem>
                 </p:tabMenu>
                 <br/>
+                
+                <p:commandButton value="BORRAR TODO!"  update=":form:solEliTodo" oncomplete="PF('solEliTodoDialog').show()" icon="ui-icon-trash" title="View">
+                    <f:setPropertyActionListener value="#{sol}" target="#{cosmetologaBean.solicitudSeleccionada}" />
+                </p:commandButton>
 
+                <p:dataTable var="sol" emptyMessage="No se encontraron solicitudes"  selection="#{cosmetologaBean.solicitud}" selectionMode="single" 
+                             id="solicitudesDT" rows="5" paginator="true" value="#{cosmetologaBean.solicitudes}"  widgetVar="solicitudes" 
+                             rowKey="#{sol.idSolicitud}">
 
-                <p:dataTable var="sol" scrollable="true" emptyMessage="No se encontraron solicitudes" scrollWidth="1520px" value="#{cosmetologaBean.solicitudes}"  widgetVar="solicitudes" style="margin-bottom:40px">
                     <f:facet name="header">
                         Mis solicitudies
                     </f:facet>
 
-                    <p:column style="width:32px;text-align: center">
-                        <p:commandButton update=":form:solDetail" oncomplete="PF('solDialog').show()" icon="ui-icon-search" title="View">
-                            <f:setPropertyActionListener value="#{sol}" target="#{cosmetologaBean.solicitudSeleccionada}" />
-                        </p:commandButton>
+                    <p:ajax id="rowSelect" event="rowSelect" listener="#{cosmetologaBean.onRowSelect}" update=":form:solDetail" oncomplete="PF('solDialog').show()" />
 
-                        <p:commandButton update=":form:solEliDetail" oncomplete="PF('solEliDialog').show()" icon="ui-icon-trash" title="View">
+                    <p:column style="width:100px;" >
+                        <p:commandButton value="Eliminar"  update=":form:solEliDetail" oncomplete="PF('solEliDialog').show()" icon="ui-icon-trash" title="View">
                             <f:setPropertyActionListener value="#{sol}" target="#{cosmetologaBean.solicitudSeleccionada}" />
                         </p:commandButton>
                     </p:column>
 
-                    <p:column headerText="Propietario de cuenta" filterBy="#{sol.nombreCompletoCliente}" filterMatchMode="startsWith" >
-                        <h:outputText value="#{sol.nombreCompletoCliente}" />
+                    <p:column headerText="Id de solicitud" style="width:100px;" >
+                        <h:outputText value="#{sol.idSolicitud}"/>
                     </p:column>
 
-                    <p:column headerText="A Nombre De" filterBy="#{sol.anombreDe}" filterMatchMode="startsWith">
+                    <p:column headerText="A Nombre De" style="width:100px;" >
                         <h:outputText value="#{sol.anombreDe}"/>
                     </p:column>
 
-                    <p:column headerText="Servicio" filterBy="#{sol.idServicio}" sortBy="#{sol.idServicio}" filterMatchMode="exact">
+                    <p:column headerText="Servicio" style="width:100px;" >
                         <f:facet name="filter">
-                            <p:selectOneMenu onchange="PF('solicitudes').filter()" style="width:100px;" >
+                            <p:selectOneMenu  onchange="PF('solicitudes').filter()" >
                                 <f:selectItem itemLabel="Servicios" itemValue="#{null}" noSelectionOption="true" />
                                 <f:selectItems value="#{cosmetologaBean.servicios}" var="ser" itemLabel="#{ser.nombre}" itemValue="#{ser.nombre}"/>
                             </p:selectOneMenu>
@@ -65,9 +68,9 @@
                         <h:outputText value="#{sol.idServicio}" />
                     </p:column>
 
-                    <p:column headerText="Duracion" filterBy="#{sol.duracion}" sortBy="#{sol.duracion}" filterMatchMode="exact">
+                    <p:column headerText="Duracion" style="width:100px;" >
                         <f:facet name="filter">
-                            <p:selectOneMenu onchange="PF('solicitudes').filter()" style="width:100px;" >
+                            <p:selectOneMenu onchange="PF('solicitudes').filter()" >
                                 <f:selectItem itemLabel="Duraciones" itemValue="#{null}" noSelectionOption="true" />
                                 <f:selectItems value="#{cosmetologaBean.duracionYprecioPorTratamientos}" var="dur" itemLabel="#{dur.duracion}" itemValue="#{dur.duracion}"/>
                             </p:selectOneMenu>
@@ -75,19 +78,19 @@
                         <h:outputText value="#{sol.duracion}" />
                     </p:column>
 
-                    <p:column headerText="Fecha y Hora" filterBy="#{sol.fecha}" filterMatchMode="startsWith" >
+                    <p:column headerText="Fecha y Hora"  style="width:100px;" >
                         <h:outputText value="#{sol.fecha}">
                             <f:convertDateTime timeZone="America/Bogota" pattern="MM/dd/yyyy HH:mm" />
                         </h:outputText>
                     </p:column>
 
-                    <p:column headerText="Direccion" filterBy="#{sol.direccion}" filterMatchMode="startsWith" >
+                    <p:column headerText="Direccion"  style="width:100px;" >
                         <h:outputText value="#{sol.direccion}" />
                     </p:column>
 
-                    <p:column headerText="Sector" filterBy="#{sol.idSector}" sortBy="#{sol.idSector}" filterMatchMode="exact">
+                    <p:column headerText="Sector" style="width:100px;" >
                         <f:facet name="filter">
-                            <p:selectOneMenu onchange="PF('solicitudes').filter()" style="width:100px;" >
+                            <p:selectOneMenu onchange="PF('solicitudes').filter()" >
                                 <f:selectItem itemLabel="Sectores" itemValue="#{null}" noSelectionOption="true" />
                                 <f:selectItems value="#{cosmetologaBean.sectores}" var="sec" itemLabel="#{sec.nombre}" itemValue="#{sec.nombre}"/>
                             </p:selectOneMenu>
@@ -95,19 +98,20 @@
                         <h:outputText value="#{sol.idSector}" />
                     </p:column>
 
-                    <p:column headerText="Telefono" filterBy="#{sol.telefono}" filterMatchMode="startsWith" >
+                    <p:column headerText="Telefono" style="width:100px;" >
                         <h:outputText value="#{sol.telefono}" />
                     </p:column>
 
-                    <p:column headerText="Estado"  filterBy="#{sol.idEstado}" filterMatchMode="startsWith" >
+                    <p:column headerText="Estado" style="width:100px;" >
                         <h:outputText value="#{sol.idEstado}" />
                     </p:column>
 
-                    <p:column headerText="precio" filterBy="#{sol.precio}" filterMatchMode="startsWith" >
+                    <p:column headerText="precio" style="width:100px;" >
                         <h:outputText value="#{sol.precio}"/>
                     </p:column>
 
                 </p:dataTable>
+
 
                 <p:dialog header="Informacion de solicitud" widgetVar="solDialog" modal="true" showEffect="fade" hideEffect="fade" resizable="false">
                     <p:outputPanel id="solDetail" style="text-align:center;">
@@ -150,7 +154,7 @@
                             </p:selectOneMenu>
 
                         </p:panelGrid>   
-                        <h:commandButton style="width:300px; height: 30px" value="Confirmar Solicitud" action="#{cosmetologaBean.confirmarEstadoDeSolicitud()}"/>
+                        <p:commandButton style="width:300px; height: 30px" value="Confirmar Solicitud" action="#{cosmetologaBean.confirmarEstadoDeSolicitud()}" ajax="false"/>
 
                     </p:outputPanel>
 
@@ -159,14 +163,23 @@
                 <p:dialog  header="Esta accion cancelara y eliminara la solicitud automaricamente. Desea continuar?" widgetVar="solEliDialog" modal="true" showEffect="fade" hideEffect="fade" resizable="false">
                     <p:outputPanel id="solEliDetail" style="text-align:center;">
 
-                        <h:commandButton style="width:300px; height: 30px" value="Aceptar" action="#{cosmetologaBean.eliminarSolicitudDeCosmetologa()}"/>
-                        <h:commandButton style="width:300px; height: 30px" value="Rechazar"  />
+                        <p:commandButton style="width:300px; height: 30px" value="Aceptar" action="#{cosmetologaBean.eliminarSolicitudDeCosmetologa()}" ajax="false" />
+                        <p:commandButton style="width:300px; height: 30px" value="Rechazar"   ajax="false"/>
+
+                    </p:outputPanel>
+                </p:dialog>
+
+
+                <p:dialog  header="Esta accion cancelara y eliminara TODAS! las solicitudes automaricamente. Desea continuar?" widgetVar="solEliTodoDialog" modal="true" showEffect="fade" hideEffect="fade" resizable="false">
+                    <p:outputPanel id="solEliTodo" style="text-align:center;">
+
+                        <p:commandButton style="width:300px; height: 30px" value="Aceptar" action="#{cosmetologaBean.eliminarTodasLasSolicitusDeCosmetologa()}" ajax="false"/>
+                        <p:commandButton style="width:300px; height: 30px" value="Rechazar"  ajax="false" />
 
                     </p:outputPanel>
                 </p:dialog>
 
             </h:form>
-        </div>
     </h:body>
 </html>
 

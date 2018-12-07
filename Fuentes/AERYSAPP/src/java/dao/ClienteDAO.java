@@ -10,6 +10,7 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.ArrayList;
 import java.util.List;
 import utils.Conexion;
 
@@ -27,6 +28,36 @@ public class ClienteDAO {
     private List<Cliente> clientes;
 
     public ClienteDAO() {
+    }
+    
+    public List<Cliente> obtenerTodosLosClientes() {
+        try {
+            conn = Conexion.getConexion();
+            String sql = "select * from cliente";
+            prep = conn.prepareStatement(sql);
+            rset = prep.executeQuery();
+
+            clientes = new ArrayList<>();
+
+            while (rset.next()) {
+                cliente = new Cliente();
+                cliente.setIdCliente(rset.getInt("idCliente"));
+                cliente.setCedula(rset.getString("cedula"));
+                cliente.setNombre(rset.getString("nombre"));
+                cliente.setApellido(rset.getString("apellido"));
+                cliente.setNombreCompleto(rset.getString("nombreCompleto"));
+                cliente.setTelefono(rset.getString("telefono"));
+                cliente.setCorreo(rset.getString("correo"));
+                cliente.setContrasena(rset.getString("contrasena"));
+                cliente.setIdGenero(rset.getInt("idGenero"));
+                cliente.setIdTipoDeDocumento(rset.getInt("idTipoDeDocumento"));
+                clientes.add(cliente);
+            }
+
+        } catch (RuntimeException | SQLException e) {
+            throw new RuntimeException("Error SQL - obtenerTodosLosClientes()!");
+        }
+        return clientes;
     }
 
     public void agregarNuevoCliente(Cliente cliente) {

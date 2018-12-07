@@ -5,16 +5,20 @@
  */
 package bean;
 
+import dao.ClienteDAO;
 import dao.CosmetologaDAO;
 import dao.DuracionYprecioPorTratamientoDAO;
 import dao.EstadoDAO;
+import dao.NotificacionDAO;
 import dao.SectorDAO;
 import dao.SolicitudDAO;
 import dao.ServicioDAO;
 import dao.ServicioPorCosmetologaDAO;
+import domain.Cliente;
 import domain.Cosmetologa;
 import domain.DuracionYprecioPorTratamiento;
 import domain.Estado;
+import domain.Notificacion;
 import domain.Sector;
 import domain.Servicio;
 import domain.ServicioPorCosmetologa;
@@ -30,6 +34,8 @@ import javax.faces.context.ExternalContext;
 import javax.faces.context.FacesContext;
 import javax.faces.view.ViewScoped;
 import javax.inject.Named;
+import org.primefaces.event.SelectEvent;
+import org.primefaces.model.UploadedFile;
 
 /**
  *
@@ -44,13 +50,19 @@ public class CosmetologaBean implements Serializable {
     String RedireccionAInicioCosmetologa = "inicioCosmetologa.xhtml";
     String RedireccionAsolicitudes = "solicitudesCosmetologa.xhtml";
     String estadoDeSolicitudTemporal;
+    String mensajeNotificacionTemporal;
+    String asuntoNotificacionTemporal;
 
     private Cosmetologa cosmetologa;
+    private Cliente cliente;
+    private UploadedFile file;
+
     private List<Cosmetologa> cosmetologas;
 
     private CosmetologaDAO cosmetologaDAO = new CosmetologaDAO();
+    private ServicioPorCosmetologaDAO servicioPorCosmetologaDAO = new ServicioPorCosmetologaDAO();
 
-    @ManagedProperty("dao.SolicitudDAO")
+    @ManagedProperty("#{ServicioPorCosmetologa}")
     private ServicioPorCosmetologa servicioPorCosmetologa = new ServicioPorCosmetologa();
     private List<ServicioPorCosmetologa> serviciosPorCosmetologa;
 
@@ -72,6 +84,7 @@ public class CosmetologaBean implements Serializable {
     private Solicitud solicitudSeleccionada;
     private List<Solicitud> solicitudesSeleccionada;
 
+    ServicioDAO servicioDAO = new ServicioDAO();
     private ServicioPorCosmetologa servicioPorCosmetologaSeleccionada;
 
     public CosmetologaBean() {
@@ -81,6 +94,7 @@ public class CosmetologaBean implements Serializable {
         sectores = new ArrayList<>();
         cosmetologas = new ArrayList<>();
         duracionYprecioPorTratamientos = new ArrayList<>();
+        serviciosPorCosmetologa = new ArrayList<>();
     }
 
     @PostConstruct
@@ -116,7 +130,6 @@ public class CosmetologaBean implements Serializable {
     }
 
     public List<ServicioPorCosmetologa> getServiciosPorCosmetologa() {
-        ServicioPorCosmetologaDAO servicioPorCosmetologaDAO = new ServicioPorCosmetologaDAO();
         serviciosPorCosmetologa = servicioPorCosmetologaDAO.obtenerTodosLosServiciosDeCosmetologa(cosmetologa.getIdCosmetologa());
         return serviciosPorCosmetologa;
     }
@@ -152,7 +165,6 @@ public class CosmetologaBean implements Serializable {
     }
 
     public List<Servicio> getServicios() {
-        ServicioDAO servicioDAO = new ServicioDAO();
         servicios = servicioDAO.obtenerTodasLosServicios();
         return servicios;
     }
@@ -295,27 +307,61 @@ public class CosmetologaBean implements Serializable {
         this.servicioPorCosmetologaSeleccionada = servicioPorCosmetologaSeleccionada;
     }
 
+    public UploadedFile getFile() {
+        return file;
+    }
+
+    public void setFile(UploadedFile file) {
+        this.file = file;
+    }
+
+    public ServicioPorCosmetologaDAO getServicioPorCosmetologaDAO() {
+        return servicioPorCosmetologaDAO;
+    }
+
+    public void setServicioPorCosmetologaDAO(ServicioPorCosmetologaDAO servicioPorCosmetologaDAO) {
+        this.servicioPorCosmetologaDAO = servicioPorCosmetologaDAO;
+    }
+
+    public ServicioDAO getServicioDAO() {
+        return servicioDAO;
+    }
+
+    public void setServicioDAO(ServicioDAO servicioDAO) {
+        this.servicioDAO = servicioDAO;
+    }
+
     // Operaciones de negocio...
     public String registrarMiServicio() {
-        ServicioDAO servicioDAO = new ServicioDAO();
+
         servicio = servicioDAO.obtenerServicioPorId(servicioPorCosmetologa.getIdServicio());
         servicioPorCosmetologa.setNombreServicio(servicio.getNombre());
         servicioPorCosmetologa.setIdCosmetologa(cosmetologa.getIdCosmetologa());
         servicioPorCosmetologa.setNombreCosmetologa(cosmetologa.getNombreCompleto());
 
-        ServicioPorCosmetologaDAO servicioPorCosmetologaDAO = new ServicioPorCosmetologaDAO();
         servicioPorCosmetologaDAO.agregarNuevoServicioPorCosmetologa(servicioPorCosmetologa);
         mensajeAmigable("Servicio registrado");
-        return null;
+        return RedireccionAInicioCosmetologa;
     }
 
-    public String guardarCosmetologa() {
+    public String guardarCosmetologa() throws IOException {
         Cosmetologa cosmetologaTemporal = cosmetologaDAO.obtenerCosmetologaPorCorreo(cosmetologa.getCorreo());
         if (cosmetologaTemporal == null) {
 
+            cosmetologa.setFotoCosmetologa(file);
             cosmetologaDAO.agregarNuevaCosmetologa(cosmetologa);
             FacesContext.getCurrentInstance().getExternalContext().getSessionMap().put("cosmetologa", cosmetologa);
             mensajeAmigable("Bienvenido " + cosmetologa.getNombre() + " a tu tienda spa");
+
+            Notificacion notificacion = new Notificacion();
+            asuntoNotificacionTemporal = "Nueva cosmetologa";
+            mensajeNotificacionTemporal = "Hola admin. " + cosmetologa.getNombreCompleto() + " se a registrado en la aplicacion";
+            notificacion.setAsunto(asuntoNotificacionTemporal);
+            notificacion.setMensaje(mensajeNotificacionTemporal);
+
+            NotificacionDAO notificacionDAO = new NotificacionDAO();
+            notificacionDAO.enviarNotificacion(notificacion);
+
             return RedireccionDeRegistroCosmetologaAinicioCosmetologa;
         } else {
             mensajeError("Este correo ya esta registrado");
@@ -332,29 +378,59 @@ public class CosmetologaBean implements Serializable {
         FacesContext.getCurrentInstance().getExternalContext().getSessionMap().put("solicitud", solicitud);
     }
 
+    public void verFotoDeCosmetologa() throws IOException {
+        cosmetologaDAO.verFoto(cosmetologa);
+    }
+
     public void confirmarEstadoDeSolicitud() {
         if ("Por confirmar".equals(solicitudSeleccionada.getIdEstado())) {
             mensajeError("Se requiere confirmar el estado de solicitud");
         } else {
             estadoDeSolicitudTemporal = solicitudSeleccionada.getIdEstado();
             modificarSolicitud();
+            
+            Notificacion notificacion = new Notificacion();
+            ClienteDAO clienteDAO = new ClienteDAO();
+            cliente = clienteDAO.obtenerClientePorId(solicitudSeleccionada.getIdCliente());
+            notificacion.setCorreoDestino(cliente.getCorreo());
+            asuntoNotificacionTemporal = "Respuesta de solicitud";
+            mensajeNotificacionTemporal = "Hola " + solicitudSeleccionada.getNombreCompletoCliente()+ ". "+solicitudSeleccionada.getNombreCompletoCosmetologa()+ " a "+solicitudSeleccionada.getIdEstado()+" su solicitud";
+            notificacion.setAsunto(asuntoNotificacionTemporal);
+            notificacion.setMensaje(mensajeNotificacionTemporal);
+
+            NotificacionDAO notificacionDAO = new NotificacionDAO();
+            notificacionDAO.enviarNotificacion(notificacion);
         }
     }
 
-    public void modificarCosmetologa() {
+    public String modificarCosmetologa() throws IOException {
+        cosmetologa.setFotoCosmetologa(file);
         cosmetologaDAO.modificarCosmetologa(cosmetologa);
         mensajeAmigable("Modificacion exitosa");
         FacesContext.getCurrentInstance().getExternalContext().getSessionMap().put("cosmetologa", cosmetologa);
+        return null;
+    }
+
+    public void cargarFoto() {
+        mensajeAmigable("Foto subida");
     }
 
     public void eliminarServicioDeCosmetologa() {
         ServicioPorCosmetologa servicioTemporal = servicioPorCosmetologaSeleccionada;
-
-        ServicioPorCosmetologaDAO servicioPorCosmetologaDAO = new ServicioPorCosmetologaDAO();
         servicioPorCosmetologaDAO.eliminarServicio(servicioTemporal);
 
         FacesContext.getCurrentInstance().getExternalContext().getSessionMap().put("cosmetologa", cosmetologa);
         mensajeAmigable("Servicio eliminado");
+
+    }
+
+    public void eliminarTodasLasSolicitusDeCosmetologa() {
+        int idCosmetologaTemporal = cosmetologa.getIdCosmetologa();
+        SolicitudDAO solicitudDAO = new SolicitudDAO();
+        solicitudDAO.eliminarTodasSolicitudesDeCosmetologa(idCosmetologaTemporal);
+
+        FacesContext.getCurrentInstance().getExternalContext().getSessionMap().put("cosmetologa", cosmetologa);
+        mensajeAmigable("Solicitudes eliminadas");
 
     }
 
@@ -417,4 +493,13 @@ public class CosmetologaBean implements Serializable {
         FacesMessage mensaje = new FacesMessage(FacesMessage.SEVERITY_INFO, msg, null);
         FacesContext.getCurrentInstance().addMessage(null, mensaje);
     }
+
+    public void onRowSelect(SelectEvent event) {
+        solicitudSeleccionada = (Solicitud) event.getObject();
+    }
+
+    public void onRowSelectServicio(SelectEvent event) {
+        servicioPorCosmetologaSeleccionada = (ServicioPorCosmetologa) event.getObject();
+    }
+
 }

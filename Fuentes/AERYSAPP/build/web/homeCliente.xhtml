@@ -8,12 +8,12 @@
     <h:head>
         <title>Autenticar</title>
         <h:outputStylesheet library="css" name="estilos.css"/>
-        <p:messages />
+
     </h:head>
     <h:body>
-        <div class="ui-g-12 ui-md-6 ui-lg-4">
             <h:form> 
-                <p:panel header="Cliente" style="margin-bottom:20px" class="formEstilo">
+                <p:panel header="Cliente" class="formEstilo">
+                    <p:messages id="msg"/>
                     <h:panelGrid columns="2">
 
                         <h:outputText value="Correo *" />
@@ -22,13 +22,13 @@
                         <h:outputText value="Contrasena *" />
                         <p:password value="#{clienteBean.cliente.contrasena}" required="true" requiredMessage="Se requiere una contrasena"  label="Contrasena"/>
 
-                        <h:commandButton style="width:150px" value="Iniciar Sesion"  action="#{clienteBean.autenticarCliente()}"/>
-                        <p:link value="Registrarse" outcome="registro/registroCliente" style="width:150px"/>
+                        <p:commandButton  value="Iniciar Sesion"  action="#{clienteBean.autenticarCliente()}" update="msg"/>
+                        
+                        <p:link value="Registrarse" outcome="registro/registroCliente"/>
 
                     </h:panelGrid>
                 </p:panel>
             </h:form>
-        </div> 
     </h:body>
 </html>
 

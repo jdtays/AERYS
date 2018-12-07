@@ -11,24 +11,22 @@
         <p:messages />
     </h:head>
     <h:body>
-        <div class="ui-g-12 ui-md-6 ui-lg-4">
-            <h:form> 
-                <p:panel header="Administrador" style="margin-bottom:20px" class="formEstilo">
-                    <h:panelGrid columns="2">
+        <h:form> 
+            <p:panel header="Administrador" style="margin-bottom:20px" class="formEstilo">
+                <h:panelGrid columns="2">
 
-                        <h:outputText value="Correo *" />
-                        <p:inputText value="#{administradorBean.admin.correo}" required="true" requiredMessage="Se requiere un correo" label="correo"/>
+                    <h:outputText value="Correo *" />
+                    <p:inputText value="#{administradorBean.admin.correo}" required="true" requiredMessage="Se requiere un correo" label="correo"/>
 
-                        <h:outputText value="Contrasena *" />
-                        <p:password value="#{administradorBean.admin.contrasena}" required="true" requiredMessage="Se requiere una contrasena"  label="Contrasena"/>
+                    <h:outputText value="Contrasena *" />
+                    <p:password value="#{administradorBean.admin.contrasena}" required="true" requiredMessage="Se requiere una contrasena"  label="Contrasena"/>
 
-                        <h:commandButton style="width:150px" value="Iniciar Sesion"  action="#{administradorBean.autenticarAdmin()}"/>
-     
+                    <p:commandButton style="width:150px" value="Iniciar Sesion"  action="#{administradorBean.autenticarAdmin()}" ajax="false"/>
 
-                    </h:panelGrid>
-                </p:panel>
-            </h:form>
-        </div> 
+
+                </h:panelGrid>
+            </p:panel>
+        </h:form>
     </h:body>
 </html>
 

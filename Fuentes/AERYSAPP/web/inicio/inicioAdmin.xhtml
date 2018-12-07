@@ -24,15 +24,45 @@
                     <p:menuitem value="Editar sectores" outcome="/admin/adminSector" icon="ui-icon-document">
                         <f:param name="i" value="2" />
                     </p:menuitem>
-                   <p:menuitem value="Editar estados" outcome="/admin/adminEstado" icon="ui-icon-document">
+                    <p:menuitem value="Editar estados" outcome="/admin/adminEstado" icon="ui-icon-document">
                         <f:param name="i" value="3" />
                     </p:menuitem>
-                    <p:menuitem value="Salir" outcome="/index" actionListener="#{administradorBean.cerrarSesion()}" icon="ui-icon-exit">
+                    <p:menuitem value="Clientes" outcome="/admin/adminCliente" icon="ui-icon-document">
                         <f:param name="i" value="4" />
+                    </p:menuitem>
+                    <p:menuitem value="Salir" outcome="/index" actionListener="#{administradorBean.cerrarSesion()}" icon="ui-icon-exit">
+                        <f:param name="i" value="5" />
                     </p:menuitem>
                 </p:tabMenu>
                 <br/>
-
+                <p:accordionPanel activeIndex="-2" class="ui-fluid">
+                    <p:tab title="Masaje de relajación">
+                        <h:panelGrid columns="1"  class="alIzq">
+                            <p:graphicImage library="img" name="masaje.jpg" />
+                            <h:outputText
+                                value="Adiós a ese nudo en el cuello, al dolor de espalda, a la 
+                                tensión muscular. Libérate en una hora de todos esos torturantes 
+                                dolores musculares con este masaje a domicilio. " />
+                        </h:panelGrid>
+                    </p:tab>
+                    <p:tab title="Depilacion con cera">
+                        <h:panelGrid columns="1"  class="alIzq">
+                            <p:graphicImage library="img" name="depilacion-con-cera.jpg" />
+                            <h:outputText value="La depilación con cera a la larga sigue siendo 
+                                          el método más rápido y efectivo para terminar de una 
+                                          vez con ese vello corporal tan molesto."/>
+                        </h:panelGrid>
+                    </p:tab>
+                    <p:tab title="Limpieza facial">
+                        <h:panelGrid columns="1" class="alIzq">
+                            <p:graphicImage library="img" name="limpieza-facial-profunda.jpg" />
+                            <h:outputText value="Extraemos tus puntos negros, puntos blancos, 
+                                          comedones y póstulas, sumado a una mascarilla facial 
+                                          acorde a tu tipo de piel devolvemos la luminosidad y 
+                                          vitalidad a la piel de tu rostro.."/>
+                        </h:panelGrid>
+                    </p:tab>
+                </p:accordionPanel>
 
             </h:form>
         </div>

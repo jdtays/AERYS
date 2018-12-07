@@ -9,12 +9,11 @@
         <h:outputStylesheet library="css" name="estilos.css"/>
     </h:head>
     <h:body>
-        <div class="ui-g-12 ui-md-6 ui-lg-4">
             <h:form>
                 <p:panel header="Cliente"  class="formEstilo">
                     <p:messages />
 
-                    <h:panelGrid columns="2" columnClasses="ui-grid-col-2,ui-grid-col-4,ui-grid-col-2,ui-grid-col-4" styleClass="ui-panelgrid-blank">
+                    <h:panelGrid columns="2">
 
                         <p:outputLabel  for="cedula" value="Numero de documento"/>
                         <p:inputText id="cedula" value="#{clienteBean.cliente.cedula}" required="true" requiredMessage="Se requiere una cedula"/>
@@ -50,10 +49,9 @@
                         <p:outputLabel for="pwd2" value="Confirmar Contrasena" />
                         <p:password id="pwd2" value="#{clienteBean.cliente.contrasena}" label="Confirmar contrasena" required="true" requiredMessage="Se requiere confirmar la contrasena" />
 
-                        <h:commandButton style="width:150px" value="Registrar" id ="registro" action="#{clienteBean.guardarCliente()}"/>
+                        <p:commandButton style="width:150px" value="Registrar" id ="registro" action="#{clienteBean.guardarCliente()}" ajax="false"/>
                     </h:panelGrid>
                 </p:panel>
             </h:form>
-        </div>
     </h:body>
 </html>

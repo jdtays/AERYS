@@ -5,13 +5,15 @@
  */
 package domain;
 
+
+
+import org.primefaces.model.UploadedFile;
+import java.sql.*;
 /**
  *
  * @author josed
  */
 public class Cosmetologa {
-
-
 
     private int idCosmetologa;
     private String cedula;
@@ -21,6 +23,10 @@ public class Cosmetologa {
     private String telefono;
     private String correo;
     private String contrasena;
+    public UploadedFile fotoCosmetologa;
+    private byte[] foto;
+    
+
 
     private int idGenero;
     private int idTipoDeDocumento;
@@ -105,5 +111,25 @@ public class Cosmetologa {
     public void setIdTipoDeDocumento(int idTipoDeDocumento) {
         this.idTipoDeDocumento = idTipoDeDocumento;
     }
+
+    public UploadedFile getFotoCosmetologa() {
+        return fotoCosmetologa;
+    }
+
+    public void setFotoCosmetologa(UploadedFile fotoCosmetologa) {
+        this.fotoCosmetologa = fotoCosmetologa;
+    }
+
+    public byte[] getFoto() {
+        return foto;
+    }
+
+    public void setFoto(byte[] foto) {
+        this.foto = foto;
+    }
+
+ 
+
+
 
 }

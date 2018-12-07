@@ -33,6 +33,7 @@ import javax.faces.context.ExternalContext;
 import javax.faces.context.FacesContext;
 import javax.faces.view.ViewScoped;
 import javax.inject.Named;
+import org.primefaces.event.SelectEvent;
 
 /**
  *
@@ -48,13 +49,15 @@ public class ClienteBean implements Serializable {
     String RedireccionAInicioCliente = "inicioCliente.xhtml";
     String RedireccionAsolicitudes = "solicitudesCliente.xhtml";
     String mensajeNotificacionTemporal;
+    String asuntoNotificacionTemporal;
 
     String EstadoPredeterminadoDeSolicitud = "Por confirmar";
 
     private Cliente cliente;
+    private Cosmetologa cosmetologa;
     private ClienteDAO clienteDAO = new ClienteDAO();
 
-    @ManagedProperty("dao.SolicitudDAO")
+    @ManagedProperty("#{Solicitud}")
     private ServicioPorCosmetologa servicioPorCosmetologa = new ServicioPorCosmetologa();
     private List<ServicioPorCosmetologa> serviciosPorCosmetologa;
 
@@ -252,6 +255,16 @@ public class ClienteBean implements Serializable {
             clienteDAO.agregarNuevoCliente(cliente);
             mensajeAmigable("Bienvenido " + cliente.getNombre() + " a tu tienda spa");
             FacesContext.getCurrentInstance().getExternalContext().getSessionMap().put("cliente", cliente);
+            
+            Notificacion notificacion = new Notificacion();
+            asuntoNotificacionTemporal = "Nuevo cliente";
+            mensajeNotificacionTemporal = "Hola admin. " + cliente.getNombreCompleto()+ " se a registrado en la aplicacion";
+            notificacion.setAsunto(asuntoNotificacionTemporal);
+            notificacion.setMensaje(mensajeNotificacionTemporal);
+
+            NotificacionDAO notificacionDAO = new NotificacionDAO();
+            notificacionDAO.enviarNotificacion(notificacion);
+            
             return RedireccionDeRegistroClienteAinicioCliente;
         } else {
             mensajeError("Este correo ya esta registrado");
@@ -260,11 +273,34 @@ public class ClienteBean implements Serializable {
 
     }
 
+    public void eliminarTodasLasSolicitusDeCliente() {
+        int idClienteTemporal = cliente.getIdCliente();
+        SolicitudDAO solicitudDAO = new SolicitudDAO();
+        solicitudDAO.eliminarTodasSolicitudesDeCliente(idClienteTemporal);
+
+        FacesContext.getCurrentInstance().getExternalContext().getSessionMap().put("cliente", cliente);
+        mensajeAmigable("Solicitudes eliminadas");
+
+    }
+
     public void eliminarSolicitudDeCliente() {
         Solicitud solicitudTemporal = solicitudSeleccionada;
 
         SolicitudDAO solicitudDAO = new SolicitudDAO();
         solicitudDAO.eliminarSolicitud(solicitudTemporal);
+
+        CosmetologaDAO cosmetologaDAO = new CosmetologaDAO();
+        cosmetologa = cosmetologaDAO.obtenerCosmetologaPorId(solicitudTemporal.getIdCosmetologa());
+
+        Notificacion notificacion = new Notificacion();
+        notificacion.setCorreoDestino(cosmetologa.getCorreo());
+        asuntoNotificacionTemporal = "Cancelacion de servicio";
+        mensajeNotificacionTemporal = "Hola " + cosmetologa.getNombreCompleto() + " " + cliente.getNombreCompleto() + " a cancelado el servicio para el dia " + solicitudSeleccionada.getFecha() + " te suguiero confirmar esta informacion al telefono " + solicitudSeleccionada.getTelefono();
+
+        notificacion.setMensaje(mensajeNotificacionTemporal);
+        notificacion.setAsunto(asuntoNotificacionTemporal);
+        NotificacionDAO notificacionDAO = new NotificacionDAO();
+        notificacionDAO.enviarNotificacion(notificacion);
 
         FacesContext.getCurrentInstance().getExternalContext().getSessionMap().put("cliente", cliente);
         mensajeAmigable("Solicitud eliminada");
@@ -291,6 +327,7 @@ public class ClienteBean implements Serializable {
     }
 
     public String solicitarServicio() {
+
         DuracionYprecioPorTratamientoDAO duracionYprecioPorTratamientoDAO = new DuracionYprecioPorTratamientoDAO();
         duracionYprecioPorTratamiento = duracionYprecioPorTratamientoDAO.obtenerDuracionYprecioPorTratamientoPorMultiplicador(solicitud.getMultiplicador());
         String duracionTemporal = duracionYprecioPorTratamiento.getDuracion();
@@ -318,12 +355,15 @@ public class ClienteBean implements Serializable {
         FacesContext.getCurrentInstance().getExternalContext().getSessionMap().put("solicitud", solicitud);
 
         Notificacion notificacion = new Notificacion();
-        //notificacion.setCorreoDestino(cosmetologaTemporal.getCorreo());
+        notificacion.setCorreoDestino(cosmetologaTemporal.getCorreo());
+        asuntoNotificacionTemporal = "Nueva Solicitud";
         mensajeNotificacionTemporal = "Hola " + cosmetologaTemporal.getNombreCompleto() + " tienes una solicitud de " + cliente.getNombreCompleto();
+        notificacion.setAsunto(asuntoNotificacionTemporal);
         notificacion.setMensaje(mensajeNotificacionTemporal);
 
         NotificacionDAO notificacionDAO = new NotificacionDAO();
         notificacionDAO.enviarNotificacion(notificacion);
+
         mensajeAmigable("Solicitud exitosa");
 
         return RedireccionAsolicitudes;
@@ -377,5 +417,7 @@ public class ClienteBean implements Serializable {
         solicitud.setPrecio(precioServicioTemporal);
     }
 
- 
+    public void onRowSelect(SelectEvent event) {
+        solicitudSeleccionada = (Solicitud) event.getObject();
+    }
 }

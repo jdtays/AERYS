@@ -13,159 +13,178 @@
 
     </h:head>
     <h:body>
-        <div class="ui-fluid">
-            <h:form id="form">
-                <p:tabMenu activeIndex="#{param.i}">
-                    <p:menuitem value="Servicios" outcome="/inicio/inicioCliente" icon="ui-icon-star">
-                        <f:param name="i" value="0" />
-                    </p:menuitem>
-                    <p:menuitem value="Editar Perfil" outcome="/perfil/perfilCliente" icon="ui-icon-person">
-                        <f:param name="i" value="1" />
-                    </p:menuitem>
-                    <p:menuitem value="Solicitar servicio" outcome="/solicitud/solicitudCliente" icon="ui-icon-document">
-                        <f:param name="i" value="2" />
-                    </p:menuitem>
-                    <p:menuitem value="Mis Solitudes" outcome="/solicitud/solicitudesCliente" icon="ui-icon-search">
-                        <f:param name="i" value="3" />
-                    </p:menuitem>
-                    <p:menuitem value="Salir" outcome="/index" actionListener="#{clienteBean.cerrarSesion()}" icon="ui-icon-exit">
-                        <f:param name="i" value="4" />
-                    </p:menuitem>
-                </p:tabMenu>
-                <br/>
+        <h:form id="form">
+            <p:tabMenu activeIndex="#{param.i}">
+                <p:menuitem value="Servicios" outcome="/inicio/inicioCliente" icon="ui-icon-star">
+                    <f:param name="i" value="0" />
+                </p:menuitem>
+                <p:menuitem value="Editar Perfil" outcome="/perfil/perfilCliente" icon="ui-icon-person">
+                    <f:param name="i" value="1" />
+                </p:menuitem>
+                <p:menuitem value="Solicitar servicio" outcome="/solicitud/solicitudCliente" icon="ui-icon-document">
+                    <f:param name="i" value="2" />
+                </p:menuitem>
+                <p:menuitem value="Mis Solitudes" outcome="/solicitud/solicitudesCliente" icon="ui-icon-search">
+                    <f:param name="i" value="3" />
+                </p:menuitem>
+                <p:menuitem value="Salir" outcome="/index" actionListener="#{clienteBean.cerrarSesion()}" icon="ui-icon-exit">
+                    <f:param name="i" value="4" />
+                </p:menuitem>
+            </p:tabMenu>
+            <br/>
 
+            <p:commandButton value="BORRAR TODO!"  update=":form:solEliTodo" oncomplete="PF('solEliTodoDialog').show()" icon="ui-icon-trash" title="View">
+                <f:setPropertyActionListener value="#{sol}" target="#{clienteBean.solicitudSeleccionada}" />
+            </p:commandButton>
 
-                <p:dataTable var="sol" scrollable="true" emptyMessage="No se encontraron solicitudes" scrollWidth="1520px" value="#{clienteBean.solicitudes}"  widgetVar="solicitudes" style="margin-bottom:40px">
-                    <f:facet name="header">
-                        Mis solicitudies
+            <p:dataTable var="sol" emptyMessage="No se encontraron solicitudes"  selection="#{clienteBean.solicitud}" selectionMode="single" 
+                         id="solicitudesDT" rows="5" paginator="true" value="#{clienteBean.solicitudes}"  widgetVar="solicitudes" 
+                         rowKey="#{sol.idSolicitud}">
+
+                <f:facet name="header">
+                    Mis solicitudies
+                </f:facet>
+
+                <p:ajax id="rowSelect" event="rowSelect" listener="#{clienteBean.onRowSelect}" update=":form:solDetail" oncomplete="PF('solDialog').show()" />
+
+                <p:column style="width:100px;" >
+                    <p:commandButton value="Eliminar"  update=":form:solEliDetail" oncomplete="PF('solEliDialog').show()" icon="ui-icon-trash" title="View">
+                        <f:setPropertyActionListener value="#{sol}" target="#{clienteBean.solicitudSeleccionada}" />
+                    </p:commandButton>
+                </p:column>
+
+                <p:column headerText="Id de solicitud" style="width:100px;" >
+                    <h:outputText value="#{sol.idSolicitud}"/>
+                </p:column>
+
+                <p:column headerText="A Nombre De" style="width:100px;" >
+                    <h:outputText value="#{sol.anombreDe}"/>
+                </p:column>
+
+                <p:column headerText="Cosmetologa" style="width:100px;" >
+                    <f:facet name="filter">
+                        <p:selectOneMenu  onchange="PF('solicitudes').filter()" >
+                            <f:selectItem itemLabel="Cosmetologas" itemValue="#{null}" noSelectionOption="true" />
+                            <f:selectItems value="#{cosmetologaBean.cosmetologas}" var="cos" itemLabel="#{cos.nombreCompleto}" itemValue="#{cos.idCosmetologa}"/>
+                        </p:selectOneMenu>
                     </f:facet>
+                    <h:outputText value="#{sol.nombreCompletoCosmetologa}" />
+                </p:column>
 
-                    <p:column style="width:32px;text-align: center">
-                        <p:commandButton update=":form:solDetail" oncomplete="PF('solDialog').show()" icon="ui-icon-search" title="View">
-                            <f:setPropertyActionListener value="#{sol}" target="#{clienteBean.solicitudSeleccionada}" />
-                        </p:commandButton>
+                <p:column headerText="Servicio" style="width:100px;" >
+                    <f:facet name="filter">
+                        <p:selectOneMenu  onchange="PF('solicitudes').filter()" >
+                            <f:selectItem itemLabel="Servicios" itemValue="#{null}" noSelectionOption="true" />
+                            <f:selectItems value="#{clienteBean.servicios}" var="ser" itemLabel="#{ser.nombre}" itemValue="#{ser.nombre}"/>
+                        </p:selectOneMenu>
+                    </f:facet>
+                    <h:outputText value="#{sol.idServicio}" />
+                </p:column>
 
-                        <p:commandButton update=":form:solEliDetail" oncomplete="PF('solEliDialog').show()" icon="ui-icon-trash" title="View">
-                            <f:setPropertyActionListener value="#{sol}" target="#{clienteBean.solicitudSeleccionada}" />
-                        </p:commandButton>
-                    </p:column>
+                <p:column headerText="Duracion" style="width:100px;" >
+                    <f:facet name="filter">
+                        <p:selectOneMenu onchange="PF('solicitudes').filter()" >
+                            <f:selectItem itemLabel="Duraciones" itemValue="#{null}" noSelectionOption="true" />
+                            <f:selectItems value="#{clienteBean.duracionYprecioPorTratamientos}" var="dur" itemLabel="#{dur.duracion}" itemValue="#{dur.duracion}"/>
+                        </p:selectOneMenu>
+                    </f:facet>
+                    <h:outputText value="#{sol.duracion}" />
+                </p:column>
 
-                    <p:column headerText="A Nombre De" filterBy="#{sol.anombreDe}" filterMatchMode="startsWith">
-                        <h:outputText value="#{sol.anombreDe}"/>
-                    </p:column>
+                <p:column headerText="Fecha y Hora"  style="width:100px;" >
+                    <h:outputText value="#{sol.fecha}">
+                        <f:convertDateTime timeZone="America/Bogota" pattern="MM/dd/yyyy HH:mm" />
+                    </h:outputText>
+                </p:column>
 
-                    <p:column headerText="Cosmetologa" filterBy="#{sol.idCosmetologa}" sortBy="#{sol.idCosmetologa}" filterMatchMode="exact">
-                        <f:facet name="filter">
-                            <p:selectOneMenu onchange="PF('solicitudes').filter()" style="width:100px;" >
-                                <f:selectItem itemLabel="Cosmetologas" itemValue="#{null}" noSelectionOption="true" />
-                                <f:selectItems value="#{cosmetologaBean.cosmetologas}" var="cos" itemLabel="#{cos.nombreCompleto}" itemValue="#{cos.idCosmetologa}"/>
-                            </p:selectOneMenu>
-                        </f:facet>
-                        <h:outputText value="#{sol.nombreCompletoCosmetologa}" />
-                    </p:column>
+                <p:column headerText="Direccion"  style="width:100px;" >
+                    <h:outputText value="#{sol.direccion}" />
+                </p:column>
 
-                    <p:column headerText="Servicio" filterBy="#{sol.idServicio}" sortBy="#{sol.idServicio}" filterMatchMode="exact">
-                        <f:facet name="filter">
-                            <p:selectOneMenu onchange="PF('solicitudes').filter()" style="width:100px;" >
-                                <f:selectItem itemLabel="Servicios" itemValue="#{null}" noSelectionOption="true" />
-                                <f:selectItems value="#{clienteBean.servicios}" var="ser" itemLabel="#{ser.nombre}" itemValue="#{ser.nombre}"/>
-                            </p:selectOneMenu>
-                        </f:facet>
-                        <h:outputText value="#{sol.idServicio}" />
-                    </p:column>
+                <p:column headerText="Sector" style="width:100px;" >
+                    <f:facet name="filter">
+                        <p:selectOneMenu onchange="PF('solicitudes').filter()" >
+                            <f:selectItem itemLabel="Sectores" itemValue="#{null}" noSelectionOption="true" />
+                            <f:selectItems value="#{clienteBean.sectores}" var="sec" itemLabel="#{sec.nombre}" itemValue="#{sec.nombre}"/>
+                        </p:selectOneMenu>
+                    </f:facet>
+                    <h:outputText value="#{sol.idSector}" />
+                </p:column>
 
-                    <p:column headerText="Duracion" filterBy="#{sol.duracion}" sortBy="#{sol.duracion}" filterMatchMode="exact">
-                        <f:facet name="filter">
-                            <p:selectOneMenu onchange="PF('solicitudes').filter()" style="width:100px;" >
-                                <f:selectItem itemLabel="Duraciones" itemValue="#{null}" noSelectionOption="true" />
-                                <f:selectItems value="#{clienteBean.duracionYprecioPorTratamientos}" var="dur" itemLabel="#{dur.duracion}" itemValue="#{dur.duracion}"/>
-                            </p:selectOneMenu>
-                        </f:facet>
-                        <h:outputText value="#{sol.duracion}" />
-                    </p:column>
+                <p:column headerText="Telefono" style="width:100px;" >
+                    <h:outputText value="#{sol.telefono}" />
+                </p:column>
 
-                    <p:column headerText="Fecha y Hora" filterBy="#{sol.fecha}" filterMatchMode="startsWith" >
-                        <h:outputText value="#{sol.fecha}">
-                            <f:convertDateTime timeZone="America/Bogota" pattern="MM/dd/yyyy HH:mm" />
-                        </h:outputText>
-                    </p:column>
+                <p:column headerText="Estado" style="width:100px;" >
+                    <h:outputText value="#{sol.idEstado}" />
+                </p:column>
 
-                    <p:column headerText="Direccion" filterBy="#{sol.direccion}" filterMatchMode="startsWith" >
-                        <h:outputText value="#{sol.direccion}" />
-                    </p:column>
+                <p:column headerText="precio" style="width:100px;" >
+                    <h:outputText value="#{sol.precio}"/>
+                </p:column>
 
-                    <p:column headerText="Sector" filterBy="#{sol.idSector}" sortBy="#{sol.idSector}" filterMatchMode="exact">
-                        <f:facet name="filter">
-                            <p:selectOneMenu onchange="PF('solicitudes').filter()" style="width:100px;" >
-                                <f:selectItem itemLabel="Sectores" itemValue="#{null}" noSelectionOption="true" />
-                                <f:selectItems value="#{clienteBean.sectores}" var="sec" itemLabel="#{sec.nombre}" itemValue="#{sec.nombre}"/>
-                            </p:selectOneMenu>
-                        </f:facet>
-                        <h:outputText value="#{sol.idSector}" />
-                    </p:column>
+            </p:dataTable>
 
-                    <p:column headerText="Telefono" filterBy="#{sol.telefono}" filterMatchMode="startsWith" >
-                        <h:outputText value="#{sol.telefono}" />
-                    </p:column>
+            <p:dialog header="Informacion de solicitud" widgetVar="solDialog" modal="true" showEffect="fade" hideEffect="fade" resizable="false">
+                <p:outputPanel id="solDetail">
+                    <p:panelGrid  columns="2" rendered="#{not empty clienteBean.solicitudSeleccionada}" columnClasses="label,value">
 
-                    <p:column headerText="Estado"  filterBy="#{sol.idEstado}" filterMatchMode="startsWith" >
-                        <h:outputText value="#{sol.idEstado}" />
-                    </p:column>
+                        <h:outputText value="iD de solicitud" />
+                        <h:outputText value="#{clienteBean.solicitudSeleccionada.idSolicitud}" />
 
-                    <p:column headerText="precio" filterBy="#{sol.precio}" filterMatchMode="startsWith" >
-                        <h:outputText value="#{sol.precio}"/>
-                    </p:column>
+                        <h:outputText value="A nombre de: " />
+                        <h:outputText value="#{clienteBean.solicitudSeleccionada.anombreDe}" />
 
-                </p:dataTable>
+                        <h:outputText value="Cosmetologa: " />
+                        <h:outputText value="#{clienteBean.solicitudSeleccionada.nombreCompletoCosmetologa}" />
 
-                <p:dialog header="Informacion de solicitud" widgetVar="solDialog" modal="true" showEffect="fade" hideEffect="fade" resizable="false">
-                    <p:outputPanel id="solDetail" style="text-align:center;">
-                        <p:panelGrid  columns="2" rendered="#{not empty clienteBean.solicitudSeleccionada}" columnClasses="label,value">
+                        <h:outputText value="Servicio: " />
+                        <h:outputText value="#{clienteBean.solicitudSeleccionada.idServicio}" />
 
-                            <h:outputText value="A nombre de: " />
-                            <h:outputText value="#{clienteBean.solicitudSeleccionada.anombreDe}" />
+                        <h:outputText value="Duracion: " />
+                        <h:outputText value="#{clienteBean.solicitudSeleccionada.duracion}" />
 
-                            <h:outputText value="Cosmetologa: " />
-                            <h:outputText value="#{clienteBean.solicitudSeleccionada.nombreCompletoCosmetologa}" />
+                        <h:outputText value="Fecha y Hora: " />
+                        <h:outputText value="#{clienteBean.solicitudSeleccionada.fecha}" />
 
-                            <h:outputText value="Servicio: " />
-                            <h:outputText value="#{clienteBean.solicitudSeleccionada.idServicio}" />
+                        <h:outputText value="Direccion: " />
+                        <h:outputText value="#{clienteBean.solicitudSeleccionada.direccion}" />
 
-                            <h:outputText value="Duracion: " />
-                            <h:outputText value="#{clienteBean.solicitudSeleccionada.duracion}" />
+                        <h:outputText value="Sector: " />
+                        <h:outputText value="#{clienteBean.solicitudSeleccionada.idSector}" />
 
-                            <h:outputText value="Fecha y Hora: " />
-                            <h:outputText value="#{clienteBean.solicitudSeleccionada.fecha}" />
+                        <h:outputText value="Telefono: " />
+                        <h:outputText value="#{clienteBean.solicitudSeleccionada.telefono}" />
 
-                            <h:outputText value="Direccion: " />
-                            <h:outputText value="#{clienteBean.solicitudSeleccionada.direccion}" />
+                        <h:outputText value="Estado: " />
+                        <h:outputText value="#{clienteBean.solicitudSeleccionada.idEstado}" />
 
-                            <h:outputText value="Sector: " />
-                            <h:outputText value="#{clienteBean.solicitudSeleccionada.idSector}" />
+                        <h:outputText value="Precio: " />
+                        <h:outputText value="#{clienteBean.solicitudSeleccionada.precio}" />
+                    </p:panelGrid>
+                </p:outputPanel>
+            </p:dialog>
 
-                            <h:outputText value="Telefono: " />
-                            <h:outputText value="#{clienteBean.solicitudSeleccionada.telefono}" />
+            <p:dialog  header="Esta accion cancelara y eliminara la solicitud automaricamente. Desea continuar?" widgetVar="solEliDialog" modal="true" showEffect="fade" hideEffect="fade" resizable="false">
+                <p:outputPanel id="solEliDetail">
 
-                            <h:outputText value="Estado: " />
-                            <h:outputText value="#{clienteBean.solicitudSeleccionada.idEstado}" />
+                    <p:commandButton style="width:300px; height: 30px" value="Aceptar" action="#{clienteBean.eliminarSolicitudDeCliente()}" ajax="false"/>
+                    <p:commandButton style="width:300px; height: 30px" value="Rechazar" ajax="false" />
 
-                            <h:outputText value="Precio: " />
-                            <h:outputText value="#{clienteBean.solicitudSeleccionada.precio}" />
-                        </p:panelGrid>
-                    </p:outputPanel>
-                </p:dialog>
+                </p:outputPanel>
+            </p:dialog>
 
-                <p:dialog  header="Esta accion cancelara y eliminara la solicitud automaricamente. Desea continuar?" widgetVar="solEliDialog" modal="true" showEffect="fade" hideEffect="fade" resizable="false">
-                    <p:outputPanel id="solEliDetail" style="text-align:center;">
+            <p:dialog  header="Esta accion cancelara y eliminara TODAS! las solicitudes automaricamente. Desea continuar?" widgetVar="solEliTodoDialog" modal="true" showEffect="fade" hideEffect="fade" resizable="false">
+                <p:outputPanel id="solEliTodo" >
 
-                        <h:commandButton style="width:300px; height: 30px" value="Aceptar" action="#{clienteBean.eliminarSolicitudDeCliente()}"/>
-                        <h:commandButton style="width:300px; height: 30px" value="Rechazar"  />
+                    <p:commandButton style="width:300px; height: 30px" value="Aceptar" action="#{clienteBean.eliminarTodasLasSolicitusDeCliente()}" ajax="false"/>
+                    <p:commandButton style="width:300px; height: 30px" value="Rechazar"  ajax="false"/>
 
-                    </p:outputPanel>
-                </p:dialog>
+                </p:outputPanel>
+            </p:dialog>
 
-            </h:form>
-        </div>
+        </h:form>
+
     </h:body>
 </html>
 

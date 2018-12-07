@@ -10,10 +10,9 @@
         <h:outputStylesheet library="css" name="estilos.css"/>
     </h:head>
     <h:body>
-        <div class="ui-g-12 ui-md-6 ui-lg-4">
-            <h:form> 
+            <h:form id="form"> 
                 <p:panel header="Cosmetologa" style="margin-bottom:20px" class="formEstilo">
-                    <p:messages />
+                    <p:messages id="msg"/>
                     <h:panelGrid columns="2">
 
                         <h:outputText value="Correo *" />
@@ -22,13 +21,12 @@
                         <h:outputText value="Contrasena *" />
                         <p:password value="#{cosmetologaBean.cosmetologa.contrasena}" required="true" requiredMessage="Se requiere una contrasena"  label="Contrasena"/>
 
-                        <h:commandButton style="width:150px" value="Iniciar Sesion" action="#{cosmetologaBean.autenticarCosmetologa()}"/>
+                        <p:commandButton style="width:150px" value="Iniciar Sesion" action="#{cosmetologaBean.autenticarCosmetologa()}" update="msg" ajax="false"/>
                         <p:link value="Registrarse" outcome="registro/registroCosmetologa" style="width:150px"/>
 
                     </h:panelGrid>
                 </p:panel>
             </h:form>
-        </div> 
     </h:body>
 </html>
 

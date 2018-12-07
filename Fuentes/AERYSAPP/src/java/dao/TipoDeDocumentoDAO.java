@@ -13,6 +13,9 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.logging.Logger;
+import javax.faces.application.FacesMessage;
+import javax.faces.context.FacesContext;
 import utils.Conexion;
 
 /**
@@ -50,8 +53,18 @@ public class TipoDeDocumentoDAO {
             }
 
         } catch (RuntimeException | SQLException e) {
-            throw new RuntimeException("Error SQL - obtenerTodos()!");
+            mensajeError("No hay conexion a la base de datos");
         }
         return tipoDeDocumentos;
+    }
+
+    private void mensajeError(String msg) {
+        FacesMessage mensaje = new FacesMessage(FacesMessage.SEVERITY_FATAL, msg, null);
+        FacesContext.getCurrentInstance().addMessage("Error", mensaje);
+    }
+
+    private void mensajeAmigable(String msg) {
+        FacesMessage mensaje = new FacesMessage(FacesMessage.SEVERITY_INFO, msg, null);
+        FacesContext.getCurrentInstance().addMessage("Error", mensaje);
     }
 }

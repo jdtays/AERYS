@@ -5,13 +5,22 @@
  */
 package dao;
 
+import com.sun.net.httpserver.HttpServer;
 import domain.Cosmetologa;
+import java.io.ByteArrayInputStream;
+import java.io.IOException;
+import java.io.InputStream;
+
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
+import javax.faces.application.FacesMessage;
+import javax.faces.context.FacesContext;
+import javax.faces.view.facelets.FaceletContext;
+import javax.servlet.http.HttpServletResponse;
 import utils.Conexion;
 
 /**
@@ -60,10 +69,10 @@ public class CosmetologaDAO {
         return cosmetologas;
     }
 
-    public void agregarNuevaCosmetologa(Cosmetologa cosmetologa) {
+    public void agregarNuevaCosmetologa(Cosmetologa cosmetologa) throws IOException {
         try {
             conn = Conexion.getConexion();
-            String sql = "insert into cosmetologa(idCosmetologa, cedula, nombre, apellido, nombreCompleto, telefono, correo, contrasena, idGenero, idTipoDeDocumento) values(?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
+            String sql = "insert into cosmetologa(idCosmetologa, cedula, nombre, apellido, nombreCompleto, telefono, correo, contrasena, idGenero, idTipoDeDocumento, fotoCosmetologa) values(?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
             prep = conn.prepareStatement(sql);
             prep.setInt(1, cosmetologa.getIdCosmetologa());
             prep.setString(2, cosmetologa.getCedula());
@@ -75,6 +84,7 @@ public class CosmetologaDAO {
             prep.setString(8, cosmetologa.getContrasena());
             prep.setInt(9, cosmetologa.getIdGenero());
             prep.setInt(10, cosmetologa.getIdTipoDeDocumento());
+            prep.setBlob(11, cosmetologa.getFotoCosmetologa().getInputstream());
 
             int rta = prep.executeUpdate();
             if (rta != 1) {
@@ -86,10 +96,10 @@ public class CosmetologaDAO {
         }
     }
 
-    public void modificarCosmetologa(Cosmetologa cosmetologa) {
+    public void modificarCosmetologa(Cosmetologa cosmetologa) throws IOException {
         try {
             conn = Conexion.getConexion();
-            String sql = "update cosmetologa set cedula = ?, nombre = ?, apellido = ?, nombreCompleto = ?, telefono = ?, correo = ?, contrasena = ?, idGenero = ?, idTipoDeDocumento = ? where idCosmetologa = ?";
+            String sql = "update cosmetologa set cedula = ?, nombre = ?, apellido = ?, nombreCompleto = ?, telefono = ?, correo = ?, contrasena = ?, idGenero = ?, idTipoDeDocumento = ?, fotoCosmetologa = ? where idCosmetologa = ?";
             prep = conn.prepareStatement(sql);
             prep.setString(1, cosmetologa.getCedula());
             prep.setString(2, cosmetologa.getNombre());
@@ -100,7 +110,8 @@ public class CosmetologaDAO {
             prep.setString(7, cosmetologa.getContrasena());
             prep.setInt(8, cosmetologa.getIdGenero());
             prep.setInt(9, cosmetologa.getIdTipoDeDocumento());
-            prep.setInt(10, cosmetologa.getIdCosmetologa());
+            prep.setBlob(10, cosmetologa.getFotoCosmetologa().getInputstream());
+            prep.setInt(11, cosmetologa.getIdCosmetologa());
 
             int rta = prep.executeUpdate();
             if (rta != 1) {
@@ -157,6 +168,37 @@ public class CosmetologaDAO {
         return Busqueda;
     }
 
+    public void verFoto(Cosmetologa cosmetologa) {
+        try {
+            conn = Conexion.getConexion();
+            String sql = "select * from cosmetologa where idCosmetologa = ?";
+            prep = conn.prepareStatement(sql);
+            prep.setInt(1, cosmetologa.getIdCosmetologa());
+            rset = prep.executeQuery();
+
+            if (rset.next()) {
+                cosmetologa = new Cosmetologa();
+                cosmetologa.setFoto(rset.getBytes("fotoCosmetologa"));
+            }
+            while (rset.next()) {
+                cosmetologa.setNombreCompleto(rset.getString("nombreCompleto"));
+                cosmetologa.setFoto(rset.getBytes("fotoCosmetologa"));
+            }
+            if (cosmetologa.getFoto() != null) {
+                HttpServletResponse response = ((HttpServletResponse) FacesContext.getCurrentInstance().getExternalContext().getResponse());
+                response.getOutputStream().write(cosmetologa.getFoto());
+                response.getOutputStream().close();
+                FacesContext.getCurrentInstance().responseComplete();
+            }
+            if (cosmetologa.getFoto() == null) {
+                mensajeError(" no tiene foto");
+
+            }
+
+        } catch (Exception e) {
+        }
+    }
+
     public Cosmetologa obtenerCosmetologaPorCorreo(String correo) {
         try {
             conn = Conexion.getConexion();
@@ -164,7 +206,6 @@ public class CosmetologaDAO {
             prep = conn.prepareStatement(sql);
             prep.setString(1, correo);
             rset = prep.executeQuery();
-
             if (rset.next()) {
                 cosmetologa = new Cosmetologa();
                 cosmetologa.setIdCosmetologa(rset.getInt("idCosmetologa"));
@@ -177,11 +218,20 @@ public class CosmetologaDAO {
                 cosmetologa.setContrasena(rset.getString("contrasena"));
                 cosmetologa.setIdGenero(rset.getInt("idGenero"));
                 cosmetologa.setIdTipoDeDocumento(rset.getInt("idTipoDeDocumento"));
-
             }
         } catch (RuntimeException | SQLException e) {
             throw new RuntimeException("Error SQL - obtenerCosmetologaPorCorreo()!");
         }
         return cosmetologa;
+    }
+
+    private void mensajeError(String msg) {
+        FacesMessage mensaje = new FacesMessage(FacesMessage.SEVERITY_FATAL, msg, null);
+        FacesContext.getCurrentInstance().addMessage("Error", mensaje);
+    }
+
+    private void mensajeAmigable(String msg) {
+        FacesMessage mensaje = new FacesMessage(FacesMessage.SEVERITY_INFO, msg, null);
+        FacesContext.getCurrentInstance().addMessage("amigable", mensaje);
     }
 }
