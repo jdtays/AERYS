@@ -30,16 +30,17 @@
             <br/>
             <p:commandButton value="Agregar" oncomplete="PF('addDialog').show()" icon="ui-icon-add" title="View"/>
 
-            <p:dataTable var="ser"  emptyMessage="No tengo servicios registrados"  value="#{cosmetologaBean.serviciosPorCosmetologa}"  widgetVar="servicios" selectionMode="single" 
-                         selection="#{cosmetologaBean.servicioPorCosmetologaSeleccionada}" rowKey="#{ser.idServicioPorCosmetologa}" rows="5" paginator="true">
+            <p:dataTable var="ser"  emptyMessage="No tengo servicios registrados" selection="#{cosmetologaBean.servicioPorCosmetologaSeleccionada}"
+                         value="#{cosmetologaBean.serviciosPorCosmetologa}"  id="serviciosDT"
+                         widgetVar="servicios" selectionMode="single" rowKey="#{ser.idServicioPorCosmetologa}" rows="5" paginator="true">
                 <f:facet name="header">
                     Mis servicios
                 </f:facet>
-                
+
                 <p:ajax id="rowSelect" event="rowSelect" listener="#{cosmetologaBean.onRowSelectServicio}" update=":form:serDetail" oncomplete="PF('serDialog').show()" />
 
                 <p:column style="width:100px;text-align: center">
-                    <p:commandButton value="Eliminar" update=":form:serEliDetail" oncomplete="PF('serEliDialog').show()" icon="ui-icon-trash" title="View">
+                    <p:commandButton immediate="true" value="Eliminar" update=":form:serEliDetail" oncomplete="PF('serEliDialog').show()" icon="ui-icon-trash" title="View">
                         <f:setPropertyActionListener value="#{ser}" target="#{cosmetologaBean.servicioPorCosmetologaSeleccionada}" />
                     </p:commandButton>
                 </p:column>
@@ -67,17 +68,6 @@
                 </p:outputPanel>
 
             </p:dialog>
-
-            <p:dialog  header="Esta accion cancelara y eliminara el servicio. Desea continuar?" widgetVar="serEliDialog" modal="true" showEffect="fade" hideEffect="fade" resizable="false">
-                <p:outputPanel id="serEliDetail" style="text-align:center;">
-
-                    <p:commandButton style="width:300px; height: 30px" value="Aceptar" actionListener="#{cosmetologaBean.eliminarServicioDeCosmetologa()}"  ajax="false" update="form:"/>
-                    <p:commandButton style="width:300px; height: 30px" value="Rechazar"  ajax="false" update="form:"/>
-
-                </p:outputPanel>
-            </p:dialog>
-
-
             <p:dialog header="Agregar servicio" widgetVar="addDialog" modal="true" showEffect="fade" hideEffect="fade" resizable="false">
                 <h:panelGrid id="addServicio" columns="2" columnClasses="ui-grid-col-2,ui-grid-col-4,ui-grid-col-2,ui-grid-col-4" styleClass="ui-panelgrid-blank">
                     <p:outputLabel  for="idCosmetologa" value="Mi ID"/>
@@ -85,16 +75,25 @@
                     <p:outputLabel  for="nombreCosmetologa" value="Cosmetologa"/>
                     <p:inputText id="nombreCosmetologa" value="#{cosmetologaBean.cosmetologa.nombreCompleto}" required="true" requiredMessage="Se requiere un estado" disabled="true"/>
                     <p:outputLabel for="servicio" value="Servicio" />
-                    <p:selectOneMenu id="servicio" value="#{cosmetologaBean.servicioPorCosmetologa.idServicio}" >
+                    <p:selectOneMenu id="servicio" value="#{cosmetologaBean.servicioPorCosmetologa.idServicio}" required="true" requiredMessage="Se requiere un servicio">
                         <f:selectItem itemLabel="Servicios"/>
-                        <f:selectItems value="#{cosmetologaBean.servicios}" var="ser" itemLabel="#{ser.nombre}" itemValue="#{ser.idServicio}"/>
+                        <f:selectItems value="#{cosmetologaBean.servicios}" var="ser" itemLabel="#{ser.nombre}" itemValue="#{ser.idServicio}" />
                     </p:selectOneMenu>
                     <p:outputLabel for="descripcion" value="Experiencia en el de servicio" />
-                    <p:inputTextarea id="descripcion" rows="10" cols="50" value="#{cosmetologaBean.servicioPorCosmetologa.descripcion}" queryDelay="750" minQueryLength="4" />
+                    <p:inputTextarea id="descripcion" rows="10" cols="50" value="#{cosmetologaBean.servicioPorCosmetologa.descripcion}" required="true" requiredMessage="Se requiere una experiencia" queryDelay="750" minQueryLength="4" />
                 </h:panelGrid>
 
                 <p:commandButton style="width:150px" value="Registrar" id ="solicitar" action="#{cosmetologaBean.registrarMiServicio()}" ajax="false"/>
 
+            </p:dialog>
+
+            <p:dialog  header="Esta accion cancelara y eliminara el servicio. Desea continuar?" widgetVar="serEliDialog" modal="true" showEffect="fade" hideEffect="fade" resizable="false">
+                <p:outputPanel id="serEliDetail" style="text-align:center;">
+
+                    <p:commandButton style="width:300px; height: 30px" value="Aceptar" actionListener="#{cosmetologaBean.eliminarServicioDeCosmetologa()}" immediate="true" ajax="false" update="form:"/>
+                    <p:commandButton style="width:300px; height: 30px" value="Rechazar"  ajax="false" update="form:"/>
+
+                </p:outputPanel>
             </p:dialog>
 
         </h:form>

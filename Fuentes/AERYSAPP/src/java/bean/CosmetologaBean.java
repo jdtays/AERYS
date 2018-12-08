@@ -52,7 +52,7 @@ public class CosmetologaBean implements Serializable {
     String estadoDeSolicitudTemporal;
     String mensajeNotificacionTemporal;
     String asuntoNotificacionTemporal;
-
+    
     private Cosmetologa cosmetologa;
     private Cliente cliente;
     private UploadedFile file;
@@ -62,8 +62,9 @@ public class CosmetologaBean implements Serializable {
     private CosmetologaDAO cosmetologaDAO = new CosmetologaDAO();
     private ServicioPorCosmetologaDAO servicioPorCosmetologaDAO = new ServicioPorCosmetologaDAO();
 
-    @ManagedProperty("#{ServicioPorCosmetologa}")
     private ServicioPorCosmetologa servicioPorCosmetologa = new ServicioPorCosmetologa();
+
+
     private List<ServicioPorCosmetologa> serviciosPorCosmetologa;
 
     private Solicitud solicitud = new Solicitud();
@@ -107,6 +108,9 @@ public class CosmetologaBean implements Serializable {
             }
             if (cosmetologa == null) {
                 cosmetologa = new Cosmetologa();
+            }
+            if (servicioPorCosmetologa == null) {
+                servicioPorCosmetologa = new ServicioPorCosmetologa();
             }
         }
     }
@@ -388,13 +392,13 @@ public class CosmetologaBean implements Serializable {
         } else {
             estadoDeSolicitudTemporal = solicitudSeleccionada.getIdEstado();
             modificarSolicitud();
-            
+
             Notificacion notificacion = new Notificacion();
             ClienteDAO clienteDAO = new ClienteDAO();
             cliente = clienteDAO.obtenerClientePorId(solicitudSeleccionada.getIdCliente());
             notificacion.setCorreoDestino(cliente.getCorreo());
             asuntoNotificacionTemporal = "Respuesta de solicitud";
-            mensajeNotificacionTemporal = "Hola " + solicitudSeleccionada.getNombreCompletoCliente()+ ". "+solicitudSeleccionada.getNombreCompletoCosmetologa()+ " a "+solicitudSeleccionada.getIdEstado()+" su solicitud";
+            mensajeNotificacionTemporal = "Hola " + solicitudSeleccionada.getNombreCompletoCliente() + ". " + solicitudSeleccionada.getNombreCompletoCosmetologa() + " a " + solicitudSeleccionada.getIdEstado() + " su solicitud";
             notificacion.setAsunto(asuntoNotificacionTemporal);
             notificacion.setMensaje(mensajeNotificacionTemporal);
 
