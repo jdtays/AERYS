@@ -1,0 +1,100 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://xmlns.jcp.org/jsf/html"
+      xmlns:p="http://primefaces.org/ui"
+      xmlns:f="http://xmlns.jcp.org/jsf/core">
+    <h:head>
+        <title>Registro</title>
+        <h:outputStylesheet library="css" name="estilos.css"/>
+        <f:event type="preRenderView" listener="#{administradorBean.verificarSesion()}"/>
+        <p:messages />
+    </h:head>
+    <h:body>
+
+            <h:form  id="form">
+                <p:tabMenu activeIndex="#{param.i}">
+                    <p:menuitem value="Inicio" outcome="/inicio/inicioAdmin" icon="ui-icon-star">
+                        <f:param name="i" value="0" />
+                    </p:menuitem>
+                    <p:menuitem value="Editar servicios" outcome="/admin/adminServicio" icon="ui-icon-document">
+                        <f:param name="i" value="1" />
+                    </p:menuitem>
+                    <p:menuitem value="Editar sectores" outcome="/admin/adminSector" icon="ui-icon-document">
+                        <f:param name="i" value="2" />
+                    </p:menuitem>
+                    <p:menuitem value="Editar estados" outcome="/admin/adminEstado" icon="ui-icon-document">
+                        <f:param name="i" value="3" />
+                    </p:menuitem>
+                    <p:menuitem value="Clientes" outcome="/admin/adminCliente" icon="ui-icon-document">
+                        <f:param name="i" value="4" />
+                    </p:menuitem>
+                    <p:menuitem value="Cosmetologas" outcome="/admin/adminCosmetologa" icon="ui-icon-document">
+                        <f:param name="i" value="5" />
+                    </p:menuitem>
+                    <p:menuitem value="Salir" outcome="/index" actionListener="#{administradorBean.cerrarSesion()}" icon="ui-icon-exit">
+                        <f:param name="i" value="6" />
+                    </p:menuitem>
+                </p:tabMenu>
+                <br/>          
+
+                <p:dataTable var="cos" emptyMessage="No se encontraron cosmetologas"  selection="#{administradorBean.cosmetologa}" selectionMode="single" 
+                             id="cosmetologasDT" rows="5" paginator="true" value="#{administradorBean.cosmetologas}"  widgetVar="cosmetologas" 
+                             rowKey="#{cos.idCosmetologa}">
+
+                    <f:facet name="header">
+                        Mis cosmetologas
+                    </f:facet>
+
+                    <p:ajax id="rowSelect" event="rowSelect" listener="#{administradorBean.onRowSelectCosmetologa}" update=":form:cosDetail" oncomplete="PF('cosDialog').show()" />
+
+                    <p:column headerText="Id de cosmetologa" style="width:100px;" >
+                        <h:outputText value="#{cos.idCosmetologa}"/>
+                    </p:column>
+
+                    <p:column headerText="Nombre" style="width:100px;" >
+                        <h:outputText value="#{cos.nombre}"/>
+                    </p:column>
+
+                    <p:column headerText="Apellido" style="width:100px;" >
+                        <h:outputText value="#{cos.apellido}"/>
+                    </p:column>
+
+                    <p:column headerText="Correo" style="width:150px;" >
+                        <h:outputText value="#{cos.correo}"/>
+                    </p:column>
+
+                    <p:column headerText="Telefono" style="width:100px;" >
+                        <h:outputText value="#{cos.telefono}"/>
+                    </p:column>
+                </p:dataTable>
+
+
+                <p:dialog header="Informacion de cosmetologa" widgetVar="cosDialog" modal="true" showEffect="fade" hideEffect="fade" resizable="false">
+                    <p:outputPanel id="cosDetail">
+                        <p:panelGrid  columns="2" rendered="#{not empty administradorBean.cosmetologaSeleccionada}" columnClasses="label,value">
+
+                            <h:outputText value="iD de cosmetologa: " />
+                            <h:outputText value="#{administradorBean.cosmetologaSeleccionada.idCosmetologa}" />
+
+                            <h:outputText value="Nombres: " />
+                            <h:outputText value="#{administradorBean.cosmetologaSeleccionada.nombre}" />
+
+                            <h:outputText value="Apellidaos: " />
+                            <h:outputText value="#{administradorBean.cosmetologaSeleccionada.apellido}" />
+
+                            <h:outputText value="Correo: " />
+                            <h:outputText value="#{administradorBean.cosmetologaSeleccionada.correo}" />
+
+                            <h:outputText value="Telefono: " />
+                            <h:outputText value="#{administradorBean.cosmetologaSeleccionada.telefono}" />
+
+                        </p:panelGrid>
+                    </p:outputPanel>
+                </p:dialog>
+
+            </h:form>
+
+    </h:body>
+</html>
+

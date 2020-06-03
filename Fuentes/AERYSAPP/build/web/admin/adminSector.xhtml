@@ -1,0 +1,108 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://xmlns.jcp.org/jsf/html"
+      xmlns:p="http://primefaces.org/ui"
+      xmlns:f="http://xmlns.jcp.org/jsf/core">
+    <h:head>
+        <title>Registro</title>
+        <h:outputStylesheet library="css" name="estilos.css"/>
+        <f:event type="preRenderView" listener="#{administradorBean.verificarSesion()}"/>
+        <p:messages />
+    </h:head>
+    <h:body>
+            <h:form  id="form">
+                <p:tabMenu activeIndex="#{param.i}">
+                    <p:menuitem value="Inicio" outcome="/inicio/inicioAdmin" icon="ui-icon-star">
+                        <f:param name="i" value="0" />
+                    </p:menuitem>
+                    <p:menuitem value="Editar servicios" outcome="/admin/adminServicio" icon="ui-icon-document">
+                        <f:param name="i" value="1" />
+                    </p:menuitem>
+                    <p:menuitem value="Editar sectores" outcome="/admin/adminSector" icon="ui-icon-document">
+                        <f:param name="i" value="2" />
+                    </p:menuitem>
+                    <p:menuitem value="Editar estados" outcome="/admin/adminEstado" icon="ui-icon-document">
+                        <f:param name="i" value="3" />
+                    </p:menuitem>
+                    <p:menuitem value="Clientes" outcome="/admin/adminCliente" icon="ui-icon-document">
+                        <f:param name="i" value="4" />
+                    </p:menuitem>
+                    <p:menuitem value="Cosmetologas" outcome="/admin/adminCosmetologa" icon="ui-icon-document">
+                        <f:param name="i" value="5" />
+                    </p:menuitem>
+                    <p:menuitem value="Salir" outcome="/index" actionListener="#{administradorBean.cerrarSesion()}" icon="ui-icon-exit">
+                        <f:param name="i" value="6" />
+                    </p:menuitem>
+                </p:tabMenu>
+                <br/>
+
+                <p:commandButton value="Agregar" onclick="PF('serAddDialog').show();" type="button" icon="pi pi-add" update=":form"/>                        
+
+                <p:dataTable var="ser" reflow ="true" emptyMessage="No se encontraron sectores"  selection="#{administradorBean.sector}" selectionMode="single" 
+                             id="sectoresDT" rows="5" paginator="true" value="#{administradorBean.sectores}"  widgetVar="sectores" 
+                             rowKey="#{ser.idSector}">
+
+                    <f:facet name="header">
+                        Mis sectores
+                    </f:facet>
+
+                    <p:ajax id="rowSelect" event="rowSelect" listener="#{administradorBean.onRowSelectSector}" update=":form:serDetail" oncomplete="PF('serDialog').show()" />
+
+                    <p:column style="width:100px;text-align: center">
+                        <p:commandButton value="Eliminar" update=":form:serEliDetail" oncomplete="PF('serEliDialog').show()" icon="ui-icon-trash" title="View">
+                            <f:setPropertyActionListener value="#{ser}" target="#{administradorBean.sectorSeleccionado}" />
+                        </p:commandButton>
+                    </p:column>
+
+                    <p:column headerText="Sector" >
+                        <h:outputText value="#{ser.nombre}" />
+                    </p:column>
+
+                    <p:column headerText="Descripcion">
+                        <h:outputText value="#{ser.descripcion}"/>
+                    </p:column>
+
+                </p:dataTable>
+
+                <p:dialog header="Informacion de sector" widgetVar="serDialog" modal="true" showEffect="fade" hideEffect="fade" resizable="false">
+                    <p:outputPanel id="serDetail" style="text-align:center;">
+                        <p:panelGrid  columns="2" rendered="#{not empty administradorBean.sectorSeleccionado}" columnClasses="label,value">
+
+                            <h:outputText value="Sector: " />
+                            <h:outputText value="#{administradorBean.sectorSeleccionado.nombre}"/>
+
+                            <h:outputText value="Descripcion: " />
+                            <h:outputText value="#{administradorBean.sectorSeleccionado.descripcion}" />
+
+                        </p:panelGrid>
+                    </p:outputPanel>
+                </p:dialog>
+
+                <p:dialog  header="Esta accion eliminara el sector. Desea continuar?" widgetVar="serEliDialog" modal="true" showEffect="fade" hideEffect="fade" resizable="false">
+                    <p:outputPanel id="serEliDetail" style="text-align:center;">
+
+                        <p:commandButton style="width:300px; height: 30px" value="Aceptar" actionListener = "#{administradorBean.eliminarSector()}" ajax="false"/>
+                        <p:commandButton style="width:300px; height: 30px" value="Rechazar" ajax="false" />
+
+                    </p:outputPanel>
+                </p:dialog>
+
+                <p:dialog  header="Agregar Sector" widgetVar="serAddDialog" modal="true" showEffect="fade" hideEffect="fade" resizable="false">
+                    <h:panelGrid id="addSector" columns="2" columnClasses="ui-grid-col-2,ui-grid-col-4,ui-grid-col-2,ui-grid-col-4" styleClass="ui-panelgrid-blank">
+
+                        <p:outputLabel  for="nombreSector" value="Nombre de Sector"/>
+                        <p:inputText id="nombreSector" value="#{administradorBean.sector.nombre}" />
+
+                        <p:outputLabel for="descripcion" value="Descripcion de sector" />
+                        <p:inputTextarea id="descripcion" rows="10" cols="50" value="#{administradorBean.sector.descripcion}" queryDelay="500" minQueryLength="4" />
+
+                        <p:commandButton style="width:150px; height: 25px"  action="#{administradorBean.guardarSector()}" value="Guardar" id ="guardar" ajax="false"/>
+
+                    </h:panelGrid>
+                </p:dialog>
+            </h:form>
+
+    </h:body>
+</html>
+
